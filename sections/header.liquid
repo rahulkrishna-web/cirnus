@@ -11,37 +11,53 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">{{ shop.name }}</a>
+    <a class="navbar-brand" href="{{ routes.root_url }}">{{ shop.name }}</a>
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled">Disabled</a>
-        </li>
+        {%- for link in section.settings.menu.links -%}
+          {%- if link.links != blank -%}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" aria-current="page" href="#" data-bs-toggle="dropdown">
+                {{- link.title | escape -}}
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{{ link.url }}">{{ link.title | escape }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
       </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>
-    <button
+    <a
       class="btn btn-primary position-relative mx-2 "
       type="button"
       aria-expanded="false"
       aria-label="Toggle cart"
+      href="{{ routes.cart_url }}"
     >
-      <i class="bi bi-bag"></i
-      ><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-        99+
-        <span class="visually-hidden">unread messages</span>
-      </span>
-    </button>
+      <i class="bi bi-bag"></i>
+      {%- if cart != empty -%}
+        <div class="cart-count-bubble">
+          {%- if cart.item_count < 100 -%}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cart.item_count }}99+
+              <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </a>
   </div>
 </nav>
 
