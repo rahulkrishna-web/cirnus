@@ -1,8 +1,10 @@
-<nav class="py-2 bg-light border-bottom">
+<nav class="py-2 bg-light border-bottom {{ section.settings.color_scheme}}">
   <div class="container-fluid">
     <div class="announcement-slider">
       {% for block in section.blocks %}
-        <div class="{{ block.settings.text_alignment }}">{{ block.settings.text }}</div>
+        <div>
+          <div class="{{ block.settings.text_alignment }}">{{ block.settings.text }}</div>
+        </div>
       {% endfor %}
     </div>
   </div>
@@ -16,6 +18,36 @@
 {
   "name": "t:sections.announcement-bar.name",
   "max_blocks": 12,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "accent-1",
+      "label": "t:sections.all.colors.label"
+    }
+  ],
   "blocks": [
     {
       "type": "announcement",
@@ -46,34 +78,6 @@
           ],
           "default": "text-center",
           "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.label"
-        },
-        {
-          "type": "select",
-          "id": "color_scheme",
-          "options": [
-            {
-              "value": "accent-1",
-              "label": "t:sections.all.colors.accent_1.label"
-            },
-            {
-              "value": "accent-2",
-              "label": "t:sections.all.colors.accent_2.label"
-            },
-            {
-              "value": "background-1",
-              "label": "t:sections.all.colors.background_1.label"
-            },
-            {
-              "value": "background-2",
-              "label": "t:sections.all.colors.background_2.label"
-            },
-            {
-              "value": "inverse",
-              "label": "t:sections.all.colors.inverse.label"
-            }
-          ],
-          "default": "accent-1",
-          "label": "t:sections.all.colors.label"
         },
         {
           "type": "url",
