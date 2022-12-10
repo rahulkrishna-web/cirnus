@@ -127,15 +127,24 @@
             "settings": {
               "text": "Welcome to our store",
               "text_alignment": "text-center",
-              "color_scheme": "accent-2",
+              "link": ""
+            }
+          },
+          "1f9921ba-48d9-4cce-bab6-42378bf1dc5a": {
+            "type": "announcement",
+            "settings": {
+              "text": "20% OFF",
+              "text_alignment": "text-center",
               "link": ""
             }
           }
         },
         "block_order": [
-          "announcement-bar-0"
+          "announcement-bar-0",
+          "1f9921ba-48d9-4cce-bab6-42378bf1dc5a"
         ],
         "settings": {
+          "color_scheme": "accent-2"
         }
       },
       "header": {
@@ -343,7 +352,6 @@
               "type": "announcement",
               "settings": {
                 "text": "Welcome to our store",
-                "color_scheme": "background-1",
                 "link": ""
               }
             }
