@@ -2,6 +2,7 @@
   "current": {
     "colors_primary": "{{ shop.brand.colors.primary[0].background }}",
     "colors_primary_contrast": "{{ shop.brand.colors.primary[0].foreground }}",
+    "gradient_primary": "linear-gradient(180deg, rgba(255, 228, 49, 1), rgba(249, 32, 32, 1) 100%)",
     "colors_secondary_1": "{{ shop.brand.colors.secondary[0].background }}",
     "colors_secondary_2": "{{ shop.brand.colors.secondary[1].background }}",
     "colors_secondary_contrast": "{{ shop.brand.colors.secondary[0].foreground }}",
