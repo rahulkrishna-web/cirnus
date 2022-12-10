@@ -17,13 +17,13 @@
       {
         "type": "color",
         "id": "colors_primary",
-        "default": "#FFFFFF",
+        "default": "#FF3D7F",
         "label": "t:settings_schema.colors.settings.colors_primary.label"
       },
       {
         "type": "color",
         "id": "colors_primary_contrast",
-        "default": "#121212",
+        "default": "#DAD8A7",
         "label": "t:settings_schema.colors.settings.colors_primary_contrast.label"
       },
       {
@@ -38,13 +38,13 @@
       {
         "type": "color",
         "id": "colors_secondary_1",
-        "default": "#121212",
+        "default": "#fff",
         "label": "t:settings_schema.colors.settings.colors_secondary_1.label"
       },
       {
         "type": "color",
         "id": "colors_secondary_2",
-        "default": "#121212",
+        "default": "#3FB8AF",
         "label": "t:settings_schema.colors.settings.colors_secondary_2.label"
       },
       {
