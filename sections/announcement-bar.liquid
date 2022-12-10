@@ -1,19 +1,17 @@
 <nav class="py-2 bg-light border-bottom">
-  <div class="container-fluid d-flex flex-wrap">
-    <ul class="nav me-auto">
-      <li class="nav-item"><a href="#" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Features</a></li>
-      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Pricing</a></li>
-      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">FAQs</a></li>
-      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">About</a></li>
-    </ul>
-    <ul class="nav">
-      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Login</a></li>
-      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Sign up</a></li>
-    </ul>
+  <div class="container-fluid">
+    <div class="announcement-slider">
+      {% for block in section.blocks %}
+        <div class="{{ block.settings.text_alignment }}">{{ block.settings.text }}</div>
+      {% endfor %}
+    </div>
   </div>
 </nav>
-
+<script>
+  $(document).ready(function () {
+    $('.announcement-slider').slick();
+  });
+</script>
 {% schema %}
 {
   "name": "t:sections.announcement-bar.name",
@@ -34,19 +32,19 @@
           "id": "text_alignment",
           "options": [
             {
-              "value": "left",
+              "value": "text-start",
               "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__1.label"
             },
             {
-              "value": "center",
+              "value": "text-center",
               "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__2.label"
             },
             {
-              "value": "right",
+              "value": "text-end",
               "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__3.label"
             }
           ],
-          "default": "center",
+          "default": "text-center",
           "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.label"
         },
         {
