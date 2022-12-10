@@ -4,3 +4,20 @@
 .slick-next {
     right: 0;
 }
+.accent-1{
+    background: rgb(var(--color-base-accent-1));
+    color: rgb(var(--color-base-solid-button-labels));
+}
+.accent-{
+    background: rgb(var(--color-base-accent-2));
+    color: rgb(var(--color-base-solid-button-labels));
+}
+.background-1{
+    background-color: rgb(var(--color-base-background-1));
+}
+.background-2{
+    background-color: rgb(var(--color-base-background-1));
+}
+.inverse{
+    background-color: rgb(var(--color-base-background-1));
+}

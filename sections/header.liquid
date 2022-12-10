@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg sticky-top bg-light">
+<nav class="navbar navbar-expand-lg sticky-top {{ section.settings.color_scheme }}">
   <div class="container-fluid">
     <button
       class="navbar-toggler"
@@ -18,13 +18,15 @@
         {%- for link in section.settings.menu.links -%}
           {%- if link.links != blank -%}
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" aria-current="page" href="#" data-bs-toggle="dropdown">
-                {{- link.title | escape -}}
+              <a class="nav-link dropdown-toggle" aria-current="page" href="{{ link.url }}" data-bs-toggle="dropdown">
+                {{ link.title | escape }}
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                {%- for childlink in link.links -%}
+                  <li>
+                    <a class="dropdown-item" href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
+                  </li>
+                {% endfor %}
               </ul>
             </li>
           {% else %}
@@ -34,9 +36,11 @@
           {% endif %}
         {% endfor %}
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form action="{{ routes.search_url }}" method="get" class="d-flex" role="search">
+        <div class="input-group">
+          <input name="q" value="" class="form-control" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
       </form>
     </div>
     <a
@@ -60,11 +64,10 @@
     </a>
   </div>
 </nav>
-
 {% schema %}
 {
   "name": "t:sections.header.name",
-  "class": "section-header",
+  "class": "sticky-top",
   "settings": [
     {
       "type": "select",
