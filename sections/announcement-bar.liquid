@@ -1,5 +1,13 @@
+{% style %}
+  .announcement-slider {
+    display: none;
+  }
+{% endstyle %}
 <nav class="py-2 bg-light border-bottom {{ section.settings.color_scheme}}">
   <div class="container-fluid">
+    <div class="announcement-loader text-center placeholder-glow">
+      <span class="placeholder col-2"></span>
+    </div>
     <div class="announcement-slider">
       {% for block in section.blocks %}
         <div>
@@ -10,8 +18,10 @@
   </div>
 </nav>
 <script>
-  $(document).ready(function () {
+  $(window).on('load', function () {
     $('.announcement-slider').slick();
+    $('.announcement-loader').hide();
+    $('.announcement-slider').fadeIn();
   });
 </script>
 {% schema %}
