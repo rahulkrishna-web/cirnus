@@ -18,21 +18,18 @@
         "type": "color",
         "id": "colors_primary",
         "default": "#FFFFFF",
-        "label": "t:settings_schema.colors.settings.colors_primary.label",
-        "info": "t:settings_schema.colors.settings.colors_primary.info"
+        "label": "t:settings_schema.colors.settings.colors_primary.label"
       },
       {
         "type": "color",
         "id": "colors_primary_contrast",
         "default": "#121212",
-        "label": "t:settings_schema.colors.settings.colors_primary_contrast.label",
-        "info": "t:settings_schema.colors.settings.colors_primary_contrast.info"
+        "label": "t:settings_schema.colors.settings.colors_primary_contrast.label"
       },
       {
         "id": "gradient_primary",
         "type": "color_background",
-        "label": "t:settings_schema.colors.settings.gradient_primary.label",
-        "info": "t:settings_schema.colors.settings.gradient_primary.info"
+        "label": "t:settings_schema.colors.settings.gradient_primary.label"
       },
       {
         "type": "header",
@@ -42,22 +39,35 @@
         "type": "color",
         "id": "colors_secondary_1",
         "default": "#121212",
-        "label": "t:settings_schema.colors.settings.colors_secondary_1.label",
-        "info": "t:settings_schema.colors.settings.colors_secondary_1.info"
+        "label": "t:settings_schema.colors.settings.colors_secondary_1.label"
       },
       {
         "type": "color",
         "id": "colors_secondary_2",
         "default": "#121212",
-        "label": "t:settings_schema.colors.settings.colors_secondary_2.label",
-        "info": "t:settings_schema.colors.settings.colors_secondary_2.info"
+        "label": "t:settings_schema.colors.settings.colors_secondary_2.label"
       },
       {
         "type": "color",
         "id": "colors_secondary_contrast",
         "default": "#FFFFFF",
-        "label": "t:settings_schema.colors.settings.colors_secondary_contrast.label",
-        "info": "t:settings_schema.colors.settings.colors_secondary_2.info"
+        "label": "t:settings_schema.colors.settings.colors_secondary_contrast.label"
+      },
+      {
+        "type": "header",
+        "content": "t:settings_schema.colors.settings.header_text.content"
+      },
+      {
+        "type": "color",
+        "id": "colors_text",
+        "default": "#000",
+        "label": "t:settings_schema.colors.settings.colors_text.label"
+      },
+      {
+        "type": "color",
+        "id": "colors_headings",
+        "default": "#000",
+        "label": "t:settings_schema.colors.settings.colors_headings.label"
       }
     ]
   },

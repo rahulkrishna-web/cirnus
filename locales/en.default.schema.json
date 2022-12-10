@@ -114,6 +114,17 @@
     "colors": {
       "name": "Colors",
       "settings": {
+        "header_text": {
+          "content": "Text Colors"
+        },
+        "colors_text": {
+          "label": "Text color",
+          "info": "This is your main brand color."
+        },
+        "colors_headings": {
+          "label": "Heading color",
+          "info": "This is your main brand color."
+        },
         "header_primary": {
           "content": "Primary colors"
         },
