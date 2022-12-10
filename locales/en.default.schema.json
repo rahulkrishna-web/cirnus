@@ -114,48 +114,36 @@
     "colors": {
       "name": "Colors",
       "settings": {
-        "colors_solid_button_labels": {
-          "label": "Solid button label",
-          "info": "Used as foreground color on accent colors."
-        },
-        "colors_accent_1": {
-          "label": "Accent 1",
-          "info": "Used for solid button background."
-        },
-        "gradient_accent_1": {
-          "label": "Accent 1 gradient"
-        },
-        "colors_accent_2": {
-          "label": "Accent 2"
-        },
-        "gradient_accent_2": {
-          "label": "Accent 2 gradient"
-        },
-        "header__1": {
+        "header_primary": {
           "content": "Primary colors"
         },
-        "header__2": {
-          "content": "Secondary colors"
+        "colors_primary": {
+          "label": "Primary color",
+          "info": "This is your main brand color."
         },
-        "colors_text": {
-          "label": "Text",
-          "info": "Used as foreground color on background colors."
+        "colors_primary_contrast": {
+          "label": "Contrast color",
+          "info": "Use a color that will display well with the primary image."
         },
-        "colors_outline_button_labels": {
-          "label": "Outline button",
-          "info": "Also used for text links."
+        "gradient_primary": {
+          "label": "Primary gradient",
+          "info": "Primary gradient for your brand."
         },
-        "colors_background_1": {
-          "label": "Background 1"
+        "header_secondary": {
+          "content": "Secondary colors",
+          "info": "Use a color that will display well with the primary image."
         },
-        "gradient_background_1": {
-          "label": "Background 1 gradient"
+        "colors_secondary_1": {
+          "label": "Secondary color 1",
+          "info": "Use a color that will display well with the primary image."
         },
-        "colors_background_2": {
-          "label": "Background 2"
+        "colors_secondary_2": {
+          "label": "Secondary color 2",
+          "info": "Use a color that will display well with the primary image."
         },
-        "gradient_background_2": {
-          "label": "Background 2 gradient"
+        "colors_secondary_contrast": {
+          "label": "Secondary contrast color",
+          "info": "Use a color that will display well with the primary image."
         }
       }
     },
