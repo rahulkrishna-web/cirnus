@@ -1,7 +1,7 @@
 {
   "current": {
-    "colors_solid_button_labels": "#ffffff",
-    "colors_accent_1": "#121212",
+    "colors_solid_button_labels": "#FFFFFF",
+    "colors_accent_1": "{{ shop.brand.colors.primary[0].background }}",
     "gradient_accent_1": "",
     "colors_accent_2": "#334fb4",
     "gradient_accent_2": "",
@@ -150,7 +150,8 @@
       "header": {
         "type": "header",
         "settings": {
-          "color_scheme": "background-1",
+          "color_scheme": "accent-1",
+          "logo": "{{ shop.brand.logo }}",
           "logo_width": 90,
           "logo_position": "middle-left",
           "menu": "main-menu",
