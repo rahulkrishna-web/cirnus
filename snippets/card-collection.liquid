@@ -5,8 +5,9 @@
   - card_collection: {Object} Collection Liquid object
   - media_aspect_ratio: {String} Size of the product image card. Values are "square" and "portrait". Default is "square" (optional)
   - columns: {Number}
-  - extend_height: {Boolean} Card height extends to available container space. Default: false (optional)
+  - extend_height: {Boolean} Card height extends to available container space. Default: true (optional)
   - wrapper_class: {String} Wrapper class for card (optional)
+  - placeholder_image: {String} Placeholder image when collection is empty (optional)
 
   Usage:
   {% render 'card-collection' %}
@@ -22,28 +23,22 @@
   if ratio == 0 or ratio == null
     assign ratio = 1
   endif
-  assign card_color_scheme = settings.card_color_scheme
-  assign card_style = settings.card_style
-  if wrapper_class == null or wrapper_class == 'none'
-    assign card_color_scheme = settings.collection_card_color_scheme
-    assign card_style = settings.collection_card_style
-  endif
 -%}
 
-<div class="card-wrapper animate-arrow {% if wrapper_class and wrapper_class != 'none' %}{{ wrapper_class }}{% else %}collection-card-wrapper{% endif %}">
+<div class="card-wrapper animate-arrow {% if wrapper_class %} {{ wrapper_class }}{% endif %}">
   <div
     class="
       card
-      card--{{ card_style }}
+      card--{{ style }}
       {% if card_collection.featured_image %} card--media{% else %} card--text{% endif %}
-      {% if card_style == 'card' %} color-{{ card_color_scheme }} gradient{% endif %}
+      {% if style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
       {% if extend_height %} card--extend-height{% endif %}
-      {% if card_collection.featured_image == nil and card_style == 'card' %} ratio{% endif %}
+      {% if card_collection.featured_image == nil and style == 'card' %} ratio{% endif %}
     "
     style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
   >
     <div
-      class="card__inner {% if card_style == 'standard' %}color-{{ card_color_scheme }} gradient{% endif %}{% if card_collection.featured_image or card_style == 'standard' %} ratio{% endif %}"
+      class="card__inner {% if style == 'standard' %} color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_collection.featured_image or style == 'standard' %} ratio{% endif %}"
       style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
     >
       {%- if card_collection.featured_image -%}
@@ -91,50 +86,18 @@
               {%- else -%}
                 {{ 'onboarding.collection_title' | t }}
               {%- endif -%}
-              {%- if card_collection.description == blank -%}
-                <span class="icon-wrap">{% render 'icon-arrow' %}</span>
-              {%- endif %}
+              {%- if style == 'standard' -%}
+                <span class="card__arrow">→</span>
+              {%- endif -%}
             </a>
           </h3>
-          {%- if card_collection.description != blank -%}
+          {%- if card_collection.description != blank and style == 'standard' -%}
             <p class="card__caption">
               {{- card_collection.description | strip_html | truncatewords: 12 -}}
-              <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span>
             </p>
           {%- endif -%}
         </div>
       </div>
     </div>
-    {% if card_style == 'card' or card_collection.featured_image %}
-      <div class="card__content">
-        <div class="card__information">
-          <h3 class="card__heading">
-            <a
-              {% if card_collection == blank %}
-                role="link" aria-disabled="true"
-              {% else %}
-                href="{{ card_collection.url }}"
-              {% endif %}
-              class="full-unstyled-link"
-            >
-              {%- if card_collection.title != blank -%}
-                {{- card_collection.title | escape -}}
-              {%- else -%}
-                {{ 'onboarding.collection_title' | t }}
-              {%- endif -%}
-              {%- if card_collection.featured_image or card_collection.description == blank -%}
-                <span class="icon-wrap">{% render 'icon-arrow' %}</span>
-              {%- endif %}
-            </a>
-          </h3>
-          {%- if card_collection.featured_image == null and card_collection.description != blank -%}
-            <p class="card__caption">
-              {{- card_collection.description | strip_html | truncatewords: 12 -}}
-              <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span>
-            </p>
-          {%- endif -%}
-        </div>
-      </div>
-    {% endif %}
   </div>
 </div>

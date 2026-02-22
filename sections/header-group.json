@@ -8,13 +8,25 @@
  * ------------------------------------------------------------
  */
 {
+  "name": "Header",
+  "type": "header",
   "sections": {
-    "main": {
-      "type": "main-blog",
-      "settings": {}
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "color_scheme": "2"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "left",
+        "menu_alignment": "center"
+      }
     }
   },
   "order": [
-    "main"
+    "announcement-bar",
+    "header"
   ]
 }

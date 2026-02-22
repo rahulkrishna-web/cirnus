@@ -8,13 +8,15 @@
  * ------------------------------------------------------------
  */
 {
+  "name": "Footer",
+  "type": "footer",
   "sections": {
-    "main": {
-      "type": "main-blog",
+    "footer": {
+      "type": "footer",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "footer"
   ]
 }

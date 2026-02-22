@@ -1,24 +1,167 @@
-.slick-prev {
-    left: 0;
+/* Base Reset */
+:root {
+  --font-body-family: 'Inter', sans-serif;
+  --font-heading-family: 'Inter', sans-serif;
+  --font-body-scale: 1.0;
+  --font-heading-scale: 1.0;
+
+  --color-base-text: 18, 18, 18;
+  --color-shadow: 18, 18, 18;
+  --color-base-background-1: 255, 255, 255;
+  --color-base-background-2: 243, 243, 243;
+  --color-base-solid-button-labels: 255, 255, 255;
+  --color-base-outline-button-labels: 18, 18, 18;
+  --color-base-accent-1: 18, 18, 18;
+  --color-base-accent-2: 51, 79, 180;
+  
+  --payment-terms-background-color: rgb(255 255 255);
+
+  --gradient-base-background-1: #ffffff;
+
+  --page-width: 1200px;
+  --page-width-margin: 2rem;
+  
+  /* Spacing Tokens - Classy/Airy */
+  --space-4: 1.6rem;
+  --space-6: 2.4rem;
+  --space-8: 3.2rem;
+  --space-10: 4.8rem; /* Section Gap */
+  --space-16: 6.4rem; /* Major Section Gap */
+  
+  --grid-desktop-vertical-spacing: 24px;
+  --grid-desktop-horizontal-spacing: 24px;
+  --grid-mobile-vertical-spacing: 16px;
+  --grid-mobile-horizontal-spacing: 16px;
 }
-.slick-next {
-    right: 0;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-body{
-    color: rgb(var(--color-text));
+
+body {
+  margin: 0;
+  font-family: var(--font-body-family);
+  font-size: 1.4rem; /* Slightly reduced for elegance */
+  line-height: 1.6; /* Increased for readability */
+  color: rgb(var(--color-foreground));
+  background-color: rgb(var(--color-background));
+  -webkit-font-smoothing: antialiased;
 }
-h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6{
-    color: rgb(var(--color-heading));
+
+/* Layout */
+.page-width {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 var(--page-width-margin);
 }
-.color-primary{
-    background: rgb(var(--color-primary));
-    color: rgb(var(--color-primary-contrast));
+
+/* Section Spacing - Vertical Rhythm */
+.section {
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-8);
 }
-.color-secondary-1{
-    background: rgb(var(--color-secondary-1));
-    color: rgb(var(--color-secondary-contrast));
+
+@media screen and (min-width: 750px) {
+  .section {
+    margin-top: var(--space-16);
+    margin-bottom: var(--space-16);
+  }
 }
-.color-secondary-2{
-    background-color: rgb(var(--color-secondary-2));
-    color: rgb(var(--color-secondary-contrast));
+
+/* Typography Polish */
+h1, h2, h3, h4, h5, .h0, .h1, .h2, .h3, .h4, .h5 {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: 600; /* Slightly lighter than 700 */
+  letter-spacing: -0.02em; /* Tighter for modern look */
+  line-height: 1.2;
+  color: rgb(var(--color-foreground));
+  margin: 0 0 1.5rem 0; /* Consistent bottom margin */
+}
+
+h2, .h2 {
+  font-size: 2.8rem; /* Reduced from massive sizes */
+}
+
+@media screen and (min-width: 750px) {
+  h2, .h2 {
+    font-size: 3.6rem;
+  }
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.link {
+  cursor: pointer;
+  display: inline-block;
+  border: none;
+  box-shadow: none;
+  text-decoration: none;
+  text-underline-offset: 0.3rem;
+  color: rgb(var(--color-link));
+  background-color: transparent;
+  font-size: 1.4rem;
+  font-family: inherit;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* Buttons (Minimal) */
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid transparent;
+  padding: 1rem 3rem; /* Wider buttons */
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  transition: box-shadow var(--duration-short) ease;
+  appearance: none;
+  background-color: rgba(var(--color-button), var(--alpha-button-background));
+  color: rgb(var(--color-button-text));
+  font-size: 1.3rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+/* Utility */
+.uppercase { text-transform: uppercase; }
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  word-wrap: normal !important;
+}
+
+/* Flex / Grid Utils */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding: 0;
+  list-style: none;
+  column-gap: var(--grid-mobile-horizontal-spacing);
+  row-gap: var(--grid-mobile-vertical-spacing);
+}
+
+@media screen and (min-width: 750px) {
+  .grid {
+    column-gap: var(--grid-desktop-horizontal-spacing);
+    row-gap: var(--grid-desktop-vertical-spacing);
+  }
 }
