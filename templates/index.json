@@ -169,8 +169,9 @@
         "campaign_button"
       ],
       "settings": {
-        "layout": "image_first",
-        "color_scheme": "scheme-1"
+        "image": "shopify://shop_images/unnamed_2.jpg",
+        "layout": "text_first",
+        "color_scheme": "scheme-4"
       }
     },
     "shop_by_occasion": {
@@ -358,7 +359,9 @@
           "settings": {
             "icon": "returns",
             "title": "Easy Returns",
-            "text": "<p>Straightforward return support built for confident fashion shopping.</p>"
+            "text": "<p>Straightforward return support built for confident fashion shopping.</p>",
+            "link_label": "",
+            "link": ""
           }
         },
         "quality": {
@@ -366,7 +369,9 @@
           "settings": {
             "icon": "star",
             "title": "Quality Fabrics",
-            "text": "<p>Fabric-first product choices made for Indian weather, comfort, and repeat wear.</p>"
+            "text": "<p>Fabric-first product choices made for Indian weather, comfort, and repeat wear.</p>",
+            "link_label": "",
+            "link": ""
           }
         },
         "payments": {
@@ -374,7 +379,9 @@
           "settings": {
             "icon": "lock",
             "title": "Secure Payments",
-            "text": "<p>Trusted checkout options with clear pricing and support.</p>"
+            "text": "<p>Trusted checkout options with clear pricing and support.</p>",
+            "link_label": "",
+            "link": ""
           }
         },
         "shipping": {
@@ -382,7 +389,9 @@
           "settings": {
             "icon": "shipping",
             "title": "Fast Shipping",
-            "text": "<p>Quick dispatch and reliable delivery for wardrobe updates and festive deadlines.</p>"
+            "text": "<p>Quick dispatch and reliable delivery for wardrobe updates and festive deadlines.</p>",
+            "link_label": "",
+            "link": ""
           }
         }
       },
