@@ -1,21 +1,126 @@
-<div class="px-4 py-5 my-5 text-center">
-  <h1 class="display-5 fw-bold">Centered hero</h1>
-  <div class="col-lg-6 mx-auto">
-    <p class="lead mb-4">
-      Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open
-      source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and
-      powerful JavaScript plugins.
-    </p>
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-      <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>
-      <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
+<div class="rich-text section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {% if section.settings.full_width %} rich-text--full-width{% endif %}">
+  <div class="rich-text__wrapper page-width">
+    <div class="rich-text__blocks rich-text__blocks--{{ section.settings.desktop_content_position }} {% if section.settings.text_alignment != 'left' %} rich-text__blocks--{{ section.settings.text_alignment }}{% endif %}">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            <h2 class="rich-text__heading rte {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
+              {{ block.settings.heading | replace: 'p>', 'span>' }}
+            </h2>
+          {%- when 'caption' -%}
+            <p class="rich-text__caption {% if block.settings.text_style == 'uppercase' %}caption-with-letter-spacing{% endif %}" {{ block.shopify_attributes }}>
+              {{ block.settings.caption | escape }}
+            </p>
+          {%- when 'text' -%}
+            <div class="rich-text__text rte" {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+            </div>
+          {%- when 'button' -%}
+            <div class="rich-text__buttons" {{ block.shopify_attributes }}>
+              {%- if block.settings.button_label != blank -%}
+                <a {% if block.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.button_link }}"{% endif %} class="button {% if block.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}">
+                  {{ block.settings.button_label | escape }}
+                </a>
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
     </div>
   </div>
 </div>
 
+{% stylesheet %}
+  .rich-text {
+    display: flex;
+    justify-content: center;
+    margin: 4rem 0;
+  }
+  
+  .rich-text--full-width {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .rich-text__wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .rich-text__blocks {
+    display: flex;
+    flex-direction: column;
+    max-width: 80rem; /* Optimized reading length */
+    width: 100%;
+    gap: 1.5rem; /* Replaces messy margins */
+    text-align: left; /* Baseline */
+  }
+
+  /* Alignment Overrides */
+  .rich-text__blocks--center {
+    text-align: center;
+    align-items: center;
+  }
+  
+  .rich-text__blocks--right {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  /* Specific typography styling */
+  .rich-text__heading {
+    margin: 0;
+  }
+
+  .rich-text__heading.h1 { font-size: clamp(3.2rem, 5vw, 4.8rem); line-height: 1.1; }
+  .rich-text__heading.h2 { font-size: clamp(2.4rem, 4vw, 3.6rem); line-height: 1.2; }
+  .rich-text__heading.h3 { font-size: clamp(2.0rem, 3vw, 2.8rem); line-height: 1.3; }
+
+  .rich-text__caption {
+    margin: 0;
+    color: rgba(var(--color-foreground), 0.7);
+    font-size: 1.4rem;
+  }
+
+  .caption-with-letter-spacing {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  .rich-text__text {
+    font-size: clamp(1.6rem, 2vw, 1.8rem);
+    line-height: 1.6;
+    color: rgba(var(--color-foreground), 0.85);
+  }
+  
+  .rich-text__text p {
+    margin: 0 0 1.5rem;
+  }
+  
+  .rich-text__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rich-text__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    /* Vertical positioning logic inside wrapper constraints */
+    .rich-text__blocks--top { margin-bottom: auto; }
+    .rich-text__blocks--middle { margin-top: auto; margin-bottom: auto; }
+    .rich-text__blocks--bottom { margin-top: auto; }
+  }
+{% endstylesheet %}
+
 {% schema %}
 {
-  "name": "t:sections.rich-text.name",
+  "name": "Rich text",
   "tag": "section",
   "class": "section",
   "settings": [
@@ -23,258 +128,131 @@
       "type": "select",
       "id": "desktop_content_position",
       "options": [
-        {
-          "value": "left",
-          "label": "t:sections.rich-text.settings.desktop_content_position.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.rich-text.settings.desktop_content_position.options__2.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.rich-text.settings.desktop_content_position.options__3.label"
-        }
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
       ],
       "default": "center",
-      "label": "t:sections.rich-text.settings.desktop_content_position.label",
-      "info": "t:sections.rich-text.settings.desktop_content_position.info"
+      "label": "Desktop content position",
+      "info": "Position is automatically optimized for mobile."
     },
     {
       "type": "select",
-      "id": "content_alignment",
+      "id": "text_alignment",
       "options": [
-        {
-          "value": "left",
-          "label": "t:sections.rich-text.settings.content_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.rich-text.settings.content_alignment.options__2.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.rich-text.settings.content_alignment.options__3.label"
-        }
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
       ],
       "default": "center",
-      "label": "t:sections.rich-text.settings.content_alignment.label"
+      "label": "Text alignment"
     },
     {
-      "type": "select",
+      "type": "color_scheme",
       "id": "color_scheme",
-      "options": [
-        {
-          "value": "accent-1",
-          "label": "t:sections.all.colors.accent_1.label"
-        },
-        {
-          "value": "accent-2",
-          "label": "t:sections.all.colors.accent_2.label"
-        },
-        {
-          "value": "background-1",
-          "label": "t:sections.all.colors.background_1.label"
-        },
-        {
-          "value": "background-2",
-          "label": "t:sections.all.colors.background_2.label"
-        },
-        {
-          "value": "inverse",
-          "label": "t:sections.all.colors.inverse.label"
-        }
-      ],
-      "default": "background-1",
-      "label": "t:sections.all.colors.label"
+      "label": "Color scheme",
+      "default": "scheme-1"
     },
     {
       "type": "checkbox",
       "id": "full_width",
       "default": true,
-      "label": "t:sections.rich-text.settings.full_width.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
-      "default": 52
+      "label": "Make section full width"
     }
   ],
   "blocks": [
     {
       "type": "heading",
-      "name": "t:sections.rich-text.blocks.heading.name",
+      "name": "Heading",
       "limit": 3,
       "settings": [
         {
           "type": "richtext",
           "id": "heading",
           "default": "<p>Talk about your brand</p>",
-          "label": "t:sections.rich-text.blocks.heading.settings.heading.label"
+          "label": "Heading"
         },
         {
           "type": "select",
           "id": "heading_size",
           "options": [
-            {
-              "value": "h2",
-              "label": "t:sections.all.heading_size.options__1.label"
-            },
-            {
-              "value": "h1",
-              "label": "t:sections.all.heading_size.options__2.label"
-            },
-            {
-              "value": "h0",
-              "label": "t:sections.all.heading_size.options__3.label"
-            },
-            {
-              "value": "hxl",
-              "label": "t:sections.all.heading_size.options__4.label"
-            }
+            { "value": "h3", "label": "Small" },
+            { "value": "h2", "label": "Medium" },
+            { "value": "h1", "label": "Large" }
           ],
-          "default": "h1",
-          "label": "t:sections.all.heading_size.label"
+          "default": "h2",
+          "label": "Heading size"
         }
       ]
     },
     {
       "type": "caption",
-      "name": "t:sections.rich-text.blocks.caption.name",
+      "name": "Caption",
       "limit": 3,
       "settings": [
         {
           "type": "text",
           "id": "caption",
           "default": "Add a tagline",
-          "label": "t:sections.rich-text.blocks.caption.settings.text.label"
+          "label": "Text"
         },
         {
           "type": "select",
           "id": "text_style",
           "options": [
-            {
-              "value": "subtitle",
-              "label": "t:sections.rich-text.blocks.caption.settings.text_style.options__1.label"
-            },
-            {
-              "value": "caption-with-letter-spacing",
-              "label": "t:sections.rich-text.blocks.caption.settings.text_style.options__2.label"
-            }
+            { "value": "subtitle", "label": "Subtitle" },
+            { "value": "uppercase", "label": "Uppercase" }
           ],
-          "default": "caption-with-letter-spacing",
-          "label": "t:sections.rich-text.blocks.caption.settings.text_style.label"
-        },
-        {
-          "type": "select",
-          "id": "text_size",
-          "options": [
-            {
-              "value": "small",
-              "label": "t:sections.rich-text.blocks.caption.settings.caption_size.options__1.label"
-            },
-            {
-              "value": "medium",
-              "label": "t:sections.rich-text.blocks.caption.settings.caption_size.options__2.label"
-            },
-            {
-              "value": "large",
-              "label": "t:sections.rich-text.blocks.caption.settings.caption_size.options__3.label"
-            }
-          ],
-          "default": "medium",
-          "label": "t:sections.rich-text.blocks.caption.settings.caption_size.label"
+          "default": "uppercase",
+          "label": "Text style"
         }
       ]
     },
     {
       "type": "text",
-      "name": "t:sections.rich-text.blocks.text.name",
+      "name": "Text",
       "limit": 3,
       "settings": [
         {
           "type": "richtext",
           "id": "text",
           "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
-          "label": "t:sections.rich-text.blocks.text.settings.text.label"
+          "label": "Description"
         }
       ]
     },
     {
       "type": "button",
-      "name": "t:sections.rich-text.blocks.buttons.name",
+      "name": "Button",
       "limit": 2,
       "settings": [
         {
           "type": "text",
           "id": "button_label",
           "default": "Button label",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_label_1.label",
-          "info": "t:sections.rich-text.blocks.buttons.settings.button_label_1.info"
+          "label": "Button label"
         },
         {
           "type": "url",
           "id": "button_link",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_link_1.label"
+          "label": "Button link"
         },
         {
           "type": "checkbox",
           "id": "button_style_secondary",
           "default": false,
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_style_secondary_1.label"
-        },
-        {
-          "type": "text",
-          "id": "button_label_2",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_label_2.label",
-          "info": "t:sections.rich-text.blocks.buttons.settings.button_label_2.info"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_link_2.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_2",
-          "default": false,
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_style_secondary_2.label"
+          "label": "Use outline button style"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "t:sections.rich-text.presets.name",
+      "name": "Rich text",
       "blocks": [
-        {
-          "type": "heading"
-        },
-        {
-          "type": "text"
-        },
-        {
-          "type": "button"
-        }
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
       ]
     }
   ]

@@ -9,12 +9,170 @@
  */
 {
   "sections": {
+    "collection_intro": {
+      "type": "rich-text",
+      "blocks": {
+        "intro_caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Collection Overview",
+            "text_style": "uppercase"
+          }
+        },
+        "intro_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Curated styles designed for Indian wardrobes</p>",
+            "heading_size": "h2"
+          }
+        },
+        "intro_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Collection pages should remain fast to scan and easy to filter, while still feeling editorial and premium. Use concise copy, visible sorting and filter tools, clear discount communication, and strong product-card consistency across women, men, kids, sarees, t-shirts, bottoms, and occasion-led edits.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "intro_caption",
+        "intro_heading",
+        "intro_text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "text_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": false
+      }
+    },
     "main": {
       "type": "main-collection",
       "settings": {}
+    },
+    "collection_value_props": {
+      "type": "multicolumn",
+      "blocks": {
+        "scan": {
+          "type": "column",
+          "settings": {
+            "icon": "star",
+            "title": "Quick Product Scan",
+            "text": "<p>Titles, price, savings, and core style cues should remain instantly visible across the grid.</p>"
+          }
+        },
+        "filters": {
+          "type": "column",
+          "settings": {
+            "icon": "lock",
+            "title": "Strong Filters",
+            "text": "<p>Support filtering by size, color, price, fabric, fit, sleeve, occasion, and availability.</p>"
+          }
+        },
+        "mobile": {
+          "type": "column",
+          "settings": {
+            "icon": "shipping",
+            "title": "Mobile First",
+            "text": "<p>Use sticky sort and filter controls on mobile to reduce friction for browsing shoppers.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "scan",
+        "filters",
+        "mobile"
+      ],
+      "settings": {
+        "title": "Collection Experience",
+        "columns_desktop": 3,
+        "column_alignment": "flex-start",
+        "image_width": "small",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "collection_faq": {
+      "type": "faq-accordion",
+      "blocks": {
+        "faq_1": {
+          "type": "question",
+          "settings": {
+            "title": "What should be visible above the product grid?",
+            "answer": "<p>Keep the collection title, a short SEO-friendly introduction, breadcrumbs, product count, sort controls, and filter access visible without cluttering the experience.</p>"
+          }
+        },
+        "faq_2": {
+          "type": "question",
+          "settings": {
+            "title": "How should filters work for fashion collections?",
+            "answer": "<p>Filters should reflect how customers actually shop apparel in India: size, color, price, fabric, fit, sleeve, occasion, and availability should be prioritized over technical attributes.</p>"
+          }
+        },
+        "faq_3": {
+          "type": "question",
+          "settings": {
+            "title": "How should SEO content be handled on collection pages?",
+            "answer": "<p>Use a short introduction near the top and richer descriptive copy or FAQs near the bottom. This keeps the page useful for search without hurting scanability or conversion.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3"
+      ],
+      "settings": {
+        "title": "Collection FAQs",
+        "expand_first": false,
+        "allow_multi_open": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "collection_seo": {
+      "type": "rich-text",
+      "blocks": {
+        "seo_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>SEO and merchandising guidance</p>",
+            "heading_size": "h3"
+          }
+        },
+        "seo_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Each collection should target a clear keyword theme with a unique H1, useful descriptive copy, and internal links to sibling categories and related occasion-led edits. This is especially important for pages such as women's sarees, men's t-shirts, kids festive wear, bottoms, and new arrivals.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "seo_heading",
+        "seo_text"
+      ],
+      "settings": {
+        "desktop_content_position": "left",
+        "text_alignment": "left",
+        "color_scheme": "scheme-1",
+        "full_width": false
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Stay close to new drops",
+        "subheading": "<p>Subscribe for fresh arrivals, festive edits, and style-led wardrobe updates.</p>",
+        "color_scheme": "scheme-1",
+        "full_width": true
+      }
     }
   },
   "order": [
-    "main"
+    "collection_intro",
+    "main",
+    "collection_value_props",
+    "collection_faq",
+    "collection_seo",
+    "newsletter"
   ]
 }

@@ -11,10 +11,213 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {}
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variant_picker",
+        "buy_buttons",
+        "description"
+      ],
+      "settings": {
+        "media_size": "large",
+        "gallery_layout": "stacked",
+        "enable_sticky_info": true,
+        "hide_variants_if_single": false
+      }
+    },
+    "product_trust": {
+      "type": "multicolumn",
+      "blocks": {
+        "fit": {
+          "type": "column",
+          "settings": {
+            "icon": "star",
+            "title": "Fit and Feel First",
+            "text": "<p>Lead with confidence through strong product imagery, clear fabric notes, and practical size guidance.</p>"
+          }
+        },
+        "returns": {
+          "type": "column",
+          "settings": {
+            "icon": "returns",
+            "title": "Easy Returns",
+            "text": "<p>Reduce hesitation for apparel buyers by keeping return and exchange messaging visible near the purchase journey.</p>"
+          }
+        },
+        "payments": {
+          "type": "column",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure Checkout",
+            "text": "<p>Keep payment trust cues and delivery messaging close to the primary add-to-cart action.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "fit",
+        "returns",
+        "payments"
+      ],
+      "settings": {
+        "title": "Why This Product Converts",
+        "columns_desktop": 3,
+        "column_alignment": "flex-start",
+        "image_width": "small",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "bundle": {
+      "type": "product-bundles",
+      "blocks": {
+        "bundle_product_1": {
+          "type": "product",
+          "settings": {}
+        },
+        "bundle_product_2": {
+          "type": "product",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bundle_product_1",
+        "bundle_product_2"
+      ],
+      "settings": {
+        "title": "Pair It With",
+        "layout_mobile": "scroll",
+        "discount_percentage": 10,
+        "show_bundle_discount": true,
+        "button_label": "Add Bundle to Cart"
+      }
+    },
+    "related_products": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "More Styles to Explore",
+        "heading_size": "h2",
+        "collection": "all",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "spacing": 20,
+        "show_view_all": true,
+        "image_ratio": "portrait",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "swipe_on_mobile": true,
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "color_scheme": "1"
+      }
+    },
+    "product_faq": {
+      "type": "faq-accordion",
+      "blocks": {
+        "faq_size": {
+          "type": "question",
+          "settings": {
+            "title": "What information should appear near size selection?",
+            "answer": "<p>Surface size guidance, fit notes, and model information close to the variant picker so apparel shoppers can choose with confidence.</p>"
+          }
+        },
+        "faq_fabric": {
+          "type": "question",
+          "settings": {
+            "title": "What product details matter most for fashion PDPs?",
+            "answer": "<p>Fabric, fit, wash care, occasion cues, delivery timing, and return messaging should be easy to find without opening too many hidden layers.</p>"
+          }
+        },
+        "faq_cross_sell": {
+          "type": "question",
+          "settings": {
+            "title": "How should cross-sells be presented?",
+            "answer": "<p>Keep them relevant and lightweight. Pairing suggestions, similar styles, and more from the same collection generally work better than noisy recommendation blocks.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_size",
+        "faq_fabric",
+        "faq_cross_sell"
+      ],
+      "settings": {
+        "title": "Product FAQs",
+        "expand_first": false,
+        "allow_multi_open": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "product_seo": {
+      "type": "rich-text",
+      "blocks": {
+        "seo_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Product page content direction</p>",
+            "heading_size": "h3"
+          }
+        },
+        "seo_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Product pages should be trust-heavy and conversion-focused, with enough descriptive content to support SEO. Use unique product titles, clear materials and use cases, strong image alt text, and structured data for product, price, availability, and ratings where applicable.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "seo_heading",
+        "seo_text"
+      ],
+      "settings": {
+        "desktop_content_position": "left",
+        "text_alignment": "left",
+        "color_scheme": "scheme-1",
+        "full_width": false
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Get alerts on restocks and new drops",
+        "subheading": "<p>Stay updated on fresh arrivals, festive launches, and family fashion edits.</p>",
+        "color_scheme": "scheme-1",
+        "full_width": true
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "product_trust",
+    "bundle",
+    "related_products",
+    "product_faq",
+    "product_seo",
+    "newsletter"
   ]
 }

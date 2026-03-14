@@ -1,0 +1,409 @@
+<div class="section-{{ section.id }}-padding">
+  <shoppable-video 
+    class="shoppable-video" 
+    data-autoplay="{{ section.settings.autoplay_muted }}"
+  >
+    <div class="shoppable-video__viewport">
+      <div class="shoppable-video__track">
+        {%- for block in section.blocks -%}
+          <div class="shoppable-video__slide" {{ block.shopify_attributes }}>
+            <div class="shoppable-video__media">
+              {%- if block.settings.video != blank -%}
+                {{
+                  block.settings.video
+                  | video_tag: 
+                    autoplay: false, 
+                    loop: true, 
+                    muted: section.settings.autoplay_muted, 
+                    playsinline: true, 
+                    controls: false, 
+                    image_size: '800x',
+                    preload: 'none',
+                    class: 'shoppable-video__video'
+                }}
+              {%- elsif block.settings.poster_image != blank -%}
+                <img
+                  src="{{ block.settings.poster_image | image_url: width: 800 }}"
+                  alt="{{ block.settings.poster_image.alt | escape }}"
+                  loading="lazy"
+                  class="shoppable-video__image"
+                >
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+              
+              <button class="shoppable-video__play-button">
+                 <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+
+            {%- if section.settings.show_tags and block.settings.product != blank -%}
+              {%- assign target_product = block.settings.product -%}
+              <div class="shoppable-video__tag-container">
+                <button 
+                  class="shoppable-video__tag-pulse" 
+                  aria-label="View {{ target_product.title }}"
+                  data-product-handle="{{ target_product.handle }}"
+                  style="--heartbeat-color: {{ section.settings.tag_color }};"
+                ></button>
+                
+                <div class="shoppable-video__product-card" hidden>
+                  {% render 'product-card', product: target_product, show_vendor: false %}
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.heading != blank or block.settings.text != blank -%}
+               <div class="shoppable-video__overlay-text">
+                  {% if block.settings.heading != blank %}<h3>{{ block.settings.heading }}</h3>{% endif %}
+                  {% if block.settings.text != blank %}<p>{{ block.settings.text }}</p>{% endif %}
+               </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+    
+    <div class="shoppable-video__controls">
+      <button class="shoppable-video__mute-toggle" aria-label="Toggle Mute">
+        <svg class="icon-unmute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <svg class="icon-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="display: none;">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
+    </div>
+  </shoppable-video>
+</div>
+
+{% stylesheet %}
+  .shoppable-video {
+    display: block;
+    position: relative;
+    width: 100%;
+    max-width: 500px; /* Mobile-first vertical format */
+    margin: 0 auto;
+    aspect-ratio: 9 / 16;
+    background: #000;
+    overflow: hidden;
+    border-radius: var(--media-radius, 16px);
+  }
+
+  .shoppable-video__viewport {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .shoppable-video__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shoppable-video__track {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .shoppable-video__slide {
+    flex: 0 0 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    position: relative;
+  }
+
+  .shoppable-video__media,
+  .shoppable-video__video,
+  .shoppable-video__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .shoppable-video__play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.4);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: opacity 0.2s;
+  }
+
+  .shoppable-video[playing] .shoppable-video__play-button {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .shoppable-video__overlay-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 4rem 2rem 2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    color: white;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .shoppable-video__overlay-text h3 {
+    margin: 0 0 0.5rem;
+    color: white;
+  }
+
+  /* Hotspot Tagging */
+  .shoppable-video__tag-container {
+    position: absolute;
+    bottom: 25%;
+    right: 2rem;
+    z-index: 3;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+  }
+
+  .shoppable-video__tag-pulse {
+    width: 16px;
+    height: 16px;
+    background: var(--heartbeat-color, #fff);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  }
+
+  .shoppable-video__product-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    width: 250px;
+    margin-right: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    /* Ensure existing product-card component fits */
+  }
+
+  .shoppable-video__controls {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 4;
+  }
+
+  .shoppable-video__mute-toggle {
+    background: rgba(0,0,0,0.4);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+{% endstylesheet %}
+
+<script>
+  if (!customElements.get('shoppable-video')) {
+    customElements.define('shoppable-video', class extends HTMLElement {
+      constructor() {
+        super();
+        this.viewport = this.querySelector('.shoppable-video__viewport');
+        this.slides = this.querySelectorAll('.shoppable-video__slide');
+        this.muteToggle = this.querySelector('.shoppable-video__mute-toggle');
+        this.isMuted = this.dataset.autoplay === 'true';
+        this.activeVideo = null;
+
+        this.bindEvents();
+      }
+
+      bindEvents() {
+        // Intersection Observer for Vertical Scroll Snapping
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const video = entry.target.querySelector('video');
+            if (entry.isIntersecting) {
+              this.playVideo(video);
+            } else {
+              this.pauseVideo(video);
+            }
+          });
+        }, { root: this.viewport, threshold: 0.6 });
+
+        this.slides.forEach(slide => this.observer.observe(slide));
+
+        // Click to Play/Pause logic on viewport
+        this.viewport.addEventListener('click', (e) => {
+           if (e.target.closest('button')) return; // Ignore button clicks
+           if (this.activeVideo) {
+             if (this.activeVideo.paused) {
+               this.activeVideo.play();
+               this.setAttribute('playing', '');
+             } else {
+               this.activeVideo.pause();
+               this.removeAttribute('playing');
+             }
+           }
+        });
+
+        if (this.muteToggle) {
+          this.muteToggle.addEventListener('click', this.toggleMute.bind(this));
+        }
+
+        // Product Tag Hover/Click Logic via Delegation
+        this.addEventListener('click', (e) => {
+          const tag = e.target.closest('.shoppable-video__tag-pulse');
+          if (tag) {
+             const card = tag.nextElementSibling;
+             if (card) {
+               card.hidden = !card.hidden;
+             }
+          }
+        });
+      }
+
+      playVideo(video) {
+        if (!video) return;
+        this.activeVideo = video;
+        video.muted = this.isMuted;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            this.setAttribute('playing', '');
+          }).catch(error => {
+            // Auto-play was prevented
+            this.removeAttribute('playing');
+          });
+        }
+      }
+
+      pauseVideo(video) {
+        if (!video) return;
+        video.pause();
+        if (this.activeVideo === video) {
+           this.removeAttribute('playing');
+           this.activeVideo = null;
+        }
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        this.slides.forEach(slide => {
+           const v = slide.querySelector('video');
+           if (v) v.muted = this.isMuted;
+        });
+        
+        const muteIcon = this.muteToggle.querySelector('.icon-mute');
+        const unmuteIcon = this.muteToggle.querySelector('.icon-unmute');
+        
+        if (this.isMuted) {
+          muteIcon.style.display = 'none';
+          unmuteIcon.style.display = 'block';
+        } else {
+          muteIcon.style.display = 'block';
+          unmuteIcon.style.display = 'none';
+        }
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Shoppable Video",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay_muted",
+      "label": "Muted Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Enable Tags",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "tag_color",
+      "label": "Hotspot Color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video Slide",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "image_picker",
+          "id": "poster_image",
+          "label": "Poster Image Fallback"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Tagged Product"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shoppable Video",
+      "blocks": [
+        {
+          "type": "video"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

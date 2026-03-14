@@ -1,0 +1,390 @@
+<div class="comparison-table-section section-{{ section.id }}-padding">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <h2 class="comparison-table__heading h2">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+
+    <div class="comparison-table__wrapper {% if section.settings.sticky_header %}comparison-table__wrapper--sticky{% endif %}">
+      <table class="comparison-table">
+        <caption class="visually-hidden">{{ section.settings.title | default: 'Product Comparison Table' }}</caption>
+        
+        <thead>
+          <tr>
+            <th scope="col" class="comparison-table__corner"><span class="visually-hidden">Features</span></th>
+            
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'product' -%}
+                {%- assign cmp_product = block.settings.product -%}
+                <th scope="col" class="comparison-table__product-header" {{ block.shopify_attributes }}>
+                  {%- if cmp_product != blank -%}
+                    {%- if section.settings.show_labels and block.settings.label != blank -%}
+                       <div class="comparison-table__badge">{{ block.settings.label }}</div>
+                    {%- endif -%}
+                    
+                    {%- if section.settings.show_images and cmp_product.featured_media -%}
+                      <div class="comparison-table__product-media">
+                        <img src="{{ cmp_product.featured_media | image_url: width: 200 }}" alt="{{ cmp_product.title | escape }}" loading="lazy" width="100" height="100">
+                      </div>
+                    {%- endif -%}
+                    
+                    <h3 class="comparison-table__product-title h5">{{ cmp_product.title }}</h3>
+                    <span class="comparison-table__product-price price">{{ cmp_product.price | money }}</span>
+                  {%- else -%}
+                    <div class="comparison-table__product-media placeholder">
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                    <h3 class="comparison-table__product-title h5">Product Title</h3>
+                    <span class="comparison-table__product-price price">$99.00</span>
+                  {%- endif -%}
+                </th>
+              {%- endif -%}
+            {%- endfor -%}
+          </tr>
+        </thead>
+
+        <tbody>
+          {%- assign feature_lines = section.settings.feature_list | split: ',' -%}
+          {%- for feature in feature_lines -%}
+            {%- assign trimmed_feature = feature | strip -%}
+            {%- if trimmed_feature != blank -%}
+              <tr class="comparison-table__row">
+                <th scope="row" class="comparison-table__feature-name">{{ trimmed_feature }}</th>
+                
+                {%- for block in section.blocks -%}
+                  {%- if block.type == 'product' -%}
+                    <td class="comparison-table__cell" data-label="{{ trimmed_feature }}">
+                      {%- comment -%}
+                        In a real scenario, you'd pull data from a metafield namespace matching the trimmed_feature.
+                        e.g., {{ block.settings.product.metafields.custom[trimmed_feature] }}
+                        For this generic component, we allow manual text overrides per block setting or use a checkmark if empty.
+                      {%- endcomment -%}
+                      
+                      {%- capture cell_content -%}
+                         {%- if forloop.index == 1 %}{{ block.settings.text_1 | default: block.settings.product.metafields.compare.f1 }}{%- endif -%}
+                         {%- if forloop.index == 2 %}{{ block.settings.text_2 | default: block.settings.product.metafields.compare.f2 }}{%- endif -%}
+                         {%- if forloop.index == 3 %}{{ block.settings.text_3 | default: block.settings.product.metafields.compare.f3 }}{%- endif -%}
+                         {%- if forloop.index == 4 %}{{ block.settings.text_4 | default: block.settings.product.metafields.compare.f4 }}{%- endif -%}
+                         {%- if forloop.index == 5 %}{{ block.settings.text_5 | default: block.settings.product.metafields.compare.f5 }}{%- endif -%}
+                      {%- endcapture -%}
+                      
+                      {%- assign clean_content = cell_content | strip -%}
+                      
+                      {%- if clean_content == 'true' or clean_content == '[check]' -%}
+                        <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="Yes"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      {%- elsif clean_content == 'false' or clean_content == '[cross]' -%}
+                        <svg class="icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="No"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                      {%- elsif clean_content != blank -%}
+                        {{ clean_content }}
+                      {%- else -%}
+                        <span class="comparison-table__cell-empty">-</span>
+                      {%- endif -%}
+                    </td>
+                  {%- endif -%}
+                {%- endfor -%}
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+        
+        {%- if section.settings.show_buttons -%}
+          <tfoot>
+            <tr>
+              <td class="comparison-table__corner comparison-table__corner--bottom"></td>
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'product' -%}
+                  {%- assign cmp_product = block.settings.product -%}
+                  <td class="comparison-table__cell comparison-table__cell--action">
+                    {%- if cmp_product != blank -%}
+                      <form method="post" action="{{ routes.cart_add_url }}">
+                        <input type="hidden" name="id" value="{{ cmp_product.selected_or_first_available_variant.id }}">
+                        <button type="submit" class="button button--primary button--small">{{ 'products.product.add_to_cart' | t }}</button>
+                      </form>
+                    {%- else -%}
+                       <button type="button" class="button button--primary button--small" disabled>{{ 'products.product.add_to_cart' | t }}</button>
+                    {%- endif -%}
+                  </td>
+                {%- endif -%}
+              {%- endfor -%}
+            </tr>
+          </tfoot>
+        {%- endif -%}
+      </table>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .comparison-table-section {
+    --table-border: 1px solid rgba(var(--color-foreground), 0.08);
+    --table-highlight: rgba(var(--color-foreground), 0.03);
+    margin: 4rem 0;
+  }
+
+  .comparison-table__heading {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .comparison-table__wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* Force scroll on very small screens if many products */
+    text-align: center;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 1.5rem;
+    border-bottom: var(--table-border);
+    vertical-align: middle;
+  }
+
+  .comparison-table__corner {
+    width: 25%;
+    border-right: var(--table-border);
+    background: rgb(var(--color-background));
+  }
+
+  /* Sticky Header Logic */
+  .comparison-table__wrapper--sticky {
+    position: relative;
+  }
+  
+  .comparison-table__wrapper--sticky thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: rgb(var(--color-background));
+    box-shadow: 0 1px 0 rgba(var(--color-foreground), 0.08);
+  }
+  
+  /* Feature Column Sticky Logic */
+  .comparison-table__wrapper--sticky tbody th,
+  .comparison-table__wrapper--sticky thead .comparison-table__corner {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: rgb(var(--color-background));
+    border-right: var(--table-border);
+  }
+  
+  .comparison-table__wrapper--sticky thead .comparison-table__corner {
+    z-index: 4; /* Top left corner needs highest z-index overlaps */
+  }
+
+  .comparison-table__product-header {
+    width: 25%;
+    vertical-align: bottom;
+    padding-bottom: 2rem;
+  }
+
+  .comparison-table__badge {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    background: rgba(var(--color-foreground), 1);
+    color: rgb(var(--color-background));
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .comparison-table__product-media {
+    margin-bottom: 1.5rem;
+  }
+
+  .comparison-table__product-media img {
+    max-width: 100px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .comparison-table__product-media.placeholder svg {
+    max-width: 100px;
+    background: #f4f4f4;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .comparison-table__product-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+  }
+
+  .comparison-table__product-price {
+    font-weight: 500;
+    color: rgba(var(--color-foreground), 0.7);
+  }
+
+  .comparison-table__feature-name {
+    text-align: left;
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
+
+  .comparison-table__row:hover td,
+  .comparison-table__row:hover th {
+    background: var(--table-highlight);
+  }
+
+  .comparison-table__cell .icon-check {
+    color: #4CAF50; /* Green check */
+    width: 24px;
+    height: 24px;
+  }
+
+  .comparison-table__cell .icon-cross {
+    color: rgba(var(--color-foreground), 0.3); /* Grey cross */
+    width: 24px;
+    height: 24px;
+  }
+
+  .comparison-table__cell-empty {
+    color: rgba(var(--color-foreground), 0.3);
+  }
+
+  .comparison-table__cell--action {
+    padding-top: 2rem;
+  }
+  
+  .comparison-table__cell--action .button {
+    width: 100%;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1rem;
+    }
+    
+    .comparison-table__product-header {
+      min-width: 160px; /* Ensure products don't squish too much */
+      scroll-snap-align: start;
+    }
+    
+    .comparison-table__corner {
+      min-width: 120px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Comparison Table",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Compare Models"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Sticky Header",
+      "info": "Keeps product info visible while scrolling down.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_images",
+      "label": "Show Product Images",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "Show Highlight Badges",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buttons",
+      "label": "Show Add to Cart Buttons",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "feature_list",
+      "label": "Features List (Comma Separated)",
+      "default": "Size, Weight, Battery Life, Material, Warranty",
+      "info": "Define the row headers here."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product to Compare",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Highlight Badge",
+          "info": "e.g., 'Best Value' or 'Pro'"
+        },
+        {
+          "type": "header",
+          "content": "Feature Manual Overrides"
+        },
+        {
+          "type": "paragraph",
+          "content": "Use 'true' for a checkmark, 'false' for a cross, or type your text. Leave blank to pull from metafields."
+        },
+        {
+          "type": "text",
+          "id": "text_1",
+          "label": "Feature 1 Value"
+        },
+        {
+          "type": "text",
+          "id": "text_2",
+          "label": "Feature 2 Value"
+        },
+        {
+          "type": "text",
+          "id": "text_3",
+          "label": "Feature 3 Value"
+        },
+        {
+          "type": "text",
+          "id": "text_4",
+          "label": "Feature 4 Value"
+        },
+        {
+          "type": "text",
+          "id": "text_5",
+          "label": "Feature 5 Value"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparison Table",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -9,85 +9,499 @@
  */
 {
   "sections": {
-    "slideshow": {
+    "hero": {
       "type": "slideshow",
       "blocks": {
-        "slide-1": {
-          "type": "slide",
-          "settings": {
-            "title": "Welcome to Cirnus",
-            "text": "<p>Discover our new collection.</p>",
-            "button_label": "Shop Now",
-            "link": "shopify://collections/all"
-          }
-        },
-        "slide-2": {
+        "slide_women": {
           "type": "slide",
           "settings": {
             "background_type": "gradient",
-            "background_gradient": "linear-gradient(180deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-            "title": "New Arrivals",
-            "button_label": "View All",
+            "background_gradient": "linear-gradient(135deg, #6B2230 0%, #B65D3A 45%, #DFCDB8 100%)",
+            "overlay_color": "#000000",
+            "overlay_opacity": 10,
+            "title": "Contemporary Indian fashion for the whole family",
+            "text": "<p>From elevated everyday dressing to festive-ready styles across women, men, and kids.</p>",
+            "button_label": "Shop Women",
+            "link": "shopify://collections/women"
+          }
+        },
+        "slide_family": {
+          "type": "slide",
+          "settings": {
+            "background_type": "gradient",
+            "background_gradient": "linear-gradient(135deg, #1F5C63 0%, #7A8150 50%, #F8F3EC 100%)",
+            "overlay_color": "#000000",
+            "overlay_opacity": 10,
+            "title": "Easy silhouettes. Better fabrics. Everyday confidence.",
+            "text": "<p>Shop t-shirts, bottoms, sarees, co-ords, kidswear, and festive edits designed for Indian wardrobes.</p>",
+            "button_label": "Shop New In",
             "link": "shopify://collections/all"
           }
         }
       },
       "block_order": [
-        "slide-1",
-        "slide-2"
+        "slide_women",
+        "slide_family"
       ],
       "settings": {
         "aspect_ratio_desktop": "21/9",
         "aspect_ratio_mobile": "3/4",
         "style": "premium",
         "card_style": true,
-        "card_margin": 20,
-        "card_radius": 12,
-        "autoplay_speed": 5
+        "card_margin": 16,
+        "card_radius": 16,
+        "autoplay_speed": 5,
+        "show_arrows": true,
+        "color_scheme": "1",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
-    "collection_list": {
-      "type": "collection-list",
+    "shop_by_category": {
+      "type": "collection-slider",
       "blocks": {
-        "coll-1": {
-          "type": "featured_collection",
-          "settings": {}
+        "women": {
+          "type": "collection",
+          "settings": {
+            "collection": "women"
+          }
         },
-        "coll-2": {
-          "type": "featured_collection",
-          "settings": {}
+        "men": {
+          "type": "collection",
+          "settings": {
+            "collection": "men"
+          }
         },
-        "coll-3": {
-          "type": "featured_collection",
-          "settings": {}
+        "kids": {
+          "type": "collection",
+          "settings": {
+            "collection": "kids"
+          }
+        },
+        "sarees": {
+          "type": "collection",
+          "settings": {
+            "collection": "sarees"
+          }
+        },
+        "tshirts": {
+          "type": "collection",
+          "settings": {
+            "collection": "t-shirts"
+          }
+        },
+        "bottoms": {
+          "type": "collection",
+          "settings": {
+            "collection": "bottoms"
+          }
         }
       },
       "block_order": [
-        "coll-1",
-        "coll-2",
-        "coll-3"
+        "women",
+        "men",
+        "kids",
+        "sarees",
+        "tshirts",
+        "bottoms"
       ],
       "settings": {
         "title": "Shop by Category",
-        "card_style": "card",
-        "columns_desktop": 3,
-        "swipe_on_mobile": true
+        "columns_desktop": 6,
+        "card_shape": "circle",
+        "show_count": true
       }
     },
-    "featured_collection": {
+    "new_in": {
       "type": "featured-collection",
       "settings": {
-        "title": "Best Sellers",
+        "title": "New In",
+        "heading_size": "h1",
+        "collection": "all",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "spacing": 20,
+        "show_view_all": true,
+        "image_ratio": "portrait",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "swipe_on_mobile": true,
+        "padding_top": 36,
+        "padding_bottom": 24,
+        "color_scheme": "1"
+      }
+    },
+    "campaign_banner": {
+      "type": "image-with-text",
+      "blocks": {
+        "campaign_caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Seasonal Edit",
+            "text_style": "uppercase"
+          }
+        },
+        "campaign_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Festive styles with everyday ease"
+          }
+        },
+        "campaign_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Blend occasion dressing with wearable silhouettes through sarees, kurta sets, festive menswear, and polished kids looks built for family celebrations.</p>"
+          }
+        },
+        "campaign_button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Shop Festive",
+            "button_link": "shopify://collections/festive"
+          }
+        }
+      },
+      "block_order": [
+        "campaign_caption",
+        "campaign_heading",
+        "campaign_text",
+        "campaign_button"
+      ],
+      "settings": {
+        "layout": "image_first",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "shop_by_occasion": {
+      "type": "multicolumn",
+      "blocks": {
+        "everyday": {
+          "type": "column",
+          "settings": {
+            "icon": "star",
+            "title": "Everyday Essentials",
+            "text": "<p>Easy staples for daily dressing across tees, tops, bottoms, and comfort-led silhouettes.</p>",
+            "link_label": "Explore",
+            "link": "shopify://collections/all"
+          }
+        },
+        "workwear": {
+          "type": "column",
+          "settings": {
+            "icon": "lock",
+            "title": "Office Ready",
+            "text": "<p>Clean, versatile pieces that move from work hours to after-hours without effort.</p>",
+            "link_label": "Shop Workwear",
+            "link": "shopify://collections/all"
+          }
+        },
+        "festive": {
+          "type": "column",
+          "settings": {
+            "icon": "shipping",
+            "title": "Festive Dressing",
+            "text": "<p>Elevated sarees, occasionwear, and family-ready looks for celebrations through the year.</p>",
+            "link_label": "See the Edit",
+            "link": "shopify://collections/festive"
+          }
+        }
+      },
+      "block_order": [
+        "everyday",
+        "workwear",
+        "festive"
+      ],
+      "settings": {
+        "title": "Shop by Occasion",
+        "columns_desktop": 3,
+        "column_alignment": "flex-start",
+        "image_width": "small",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "bestsellers": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Bestsellers",
+        "heading_size": "h2",
         "collection": "all",
         "products_to_show": 4,
         "columns_desktop": 4,
-        "show_secondary_image": true
+        "spacing": 20,
+        "show_view_all": true,
+        "image_ratio": "portrait",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "swipe_on_mobile": true,
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "color_scheme": "1"
+      }
+    },
+    "women_spotlight": {
+      "type": "collection-list",
+      "blocks": {
+        "women_sarees": {
+          "type": "collection",
+          "settings": {
+            "collection": "sarees"
+          }
+        },
+        "women_kurtas": {
+          "type": "collection",
+          "settings": {
+            "collection": "kurta-sets"
+          }
+        },
+        "women_dresses": {
+          "type": "collection",
+          "settings": {
+            "collection": "dresses"
+          }
+        }
+      },
+      "block_order": [
+        "women_sarees",
+        "women_kurtas",
+        "women_dresses"
+      ],
+      "settings": {
+        "title": "Women Spotlight",
+        "show_view_all": false,
+        "columns_desktop": 3,
+        "image_ratio": "portrait",
+        "swipe_on_mobile": true,
+        "show_count": true
+      }
+    },
+    "men_spotlight": {
+      "type": "collection-list",
+      "blocks": {
+        "men_tshirts": {
+          "type": "collection",
+          "settings": {
+            "collection": "men-t-shirts"
+          }
+        },
+        "men_shirts": {
+          "type": "collection",
+          "settings": {
+            "collection": "shirts"
+          }
+        },
+        "men_kurtas": {
+          "type": "collection",
+          "settings": {
+            "collection": "mens-kurtas"
+          }
+        }
+      },
+      "block_order": [
+        "men_tshirts",
+        "men_shirts",
+        "men_kurtas"
+      ],
+      "settings": {
+        "title": "Men Spotlight",
+        "show_view_all": false,
+        "columns_desktop": 3,
+        "image_ratio": "portrait",
+        "swipe_on_mobile": true,
+        "show_count": true
+      }
+    },
+    "kids_spotlight": {
+      "type": "collection-list",
+      "blocks": {
+        "kids_boys": {
+          "type": "collection",
+          "settings": {
+            "collection": "boys"
+          }
+        },
+        "kids_girls": {
+          "type": "collection",
+          "settings": {
+            "collection": "girls"
+          }
+        },
+        "kids_festive": {
+          "type": "collection",
+          "settings": {
+            "collection": "kids-festive-wear"
+          }
+        }
+      },
+      "block_order": [
+        "kids_boys",
+        "kids_girls",
+        "kids_festive"
+      ],
+      "settings": {
+        "title": "Kids Spotlight",
+        "show_view_all": false,
+        "columns_desktop": 3,
+        "image_ratio": "portrait",
+        "swipe_on_mobile": true,
+        "show_count": true
+      }
+    },
+    "trust_band": {
+      "type": "multicolumn",
+      "blocks": {
+        "returns": {
+          "type": "column",
+          "settings": {
+            "icon": "returns",
+            "title": "Easy Returns",
+            "text": "<p>Straightforward return support built for confident fashion shopping.</p>"
+          }
+        },
+        "quality": {
+          "type": "column",
+          "settings": {
+            "icon": "star",
+            "title": "Quality Fabrics",
+            "text": "<p>Fabric-first product choices made for Indian weather, comfort, and repeat wear.</p>"
+          }
+        },
+        "payments": {
+          "type": "column",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure Payments",
+            "text": "<p>Trusted checkout options with clear pricing and support.</p>"
+          }
+        },
+        "shipping": {
+          "type": "column",
+          "settings": {
+            "icon": "shipping",
+            "title": "Fast Shipping",
+            "text": "<p>Quick dispatch and reliable delivery for wardrobe updates and festive deadlines.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "returns",
+        "quality",
+        "payments",
+        "shipping"
+      ],
+      "settings": {
+        "title": "Why Families Shop With Cirnus",
+        "columns_desktop": 4,
+        "column_alignment": "center",
+        "image_width": "small",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "testimonials": {
+      "type": "testimonial-slider",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>The quality felt better than expected and the fit guide helped me order for the whole family in one go.</p>",
+            "author": "Aarushi",
+            "role": "Verified Buyer, Bengaluru"
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>The festive collection looks elevated without feeling too heavy. Great balance of comfort and occasion.</p>",
+            "author": "Neha",
+            "role": "Verified Buyer, Delhi"
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>Good styles for men, women, and kids in one place. It makes family shopping much easier.</p>",
+            "author": "Rohan",
+            "role": "Verified Buyer, Pune"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3"
+      ],
+      "settings": {
+        "title": "What Our Customers Say",
+        "show_quotes": true,
+        "show_stars": true,
+        "text_color": "#222222",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "brand_story": {
+      "type": "rich-text",
+      "blocks": {
+        "story_caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Brand Direction",
+            "text_style": "uppercase"
+          }
+        },
+        "story_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Modern Indian style, built for everyday life</p>",
+            "heading_size": "h2"
+          }
+        },
+        "story_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Cirnus is positioned as a contemporary Indian fashion destination for men, women, and kids. The homepage should balance editorial warmth with strong commerce cues, guiding shoppers through category-led journeys, occasion-led edits, new arrivals, and trust-building content that supports both conversion and SEO.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "story_caption",
+        "story_heading",
+        "story_text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "text_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": true
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Join the Cirnus community",
+        "subheading": "<p>Get early access to new drops, festive edits, and special offers for the whole family.</p>",
+        "color_scheme": "scheme-1",
+        "full_width": true
       }
     }
   },
   "order": [
-    "slideshow",
-    "collection_list",
-    "featured_collection"
+    "hero",
+    "shop_by_category",
+    "new_in",
+    "campaign_banner",
+    "shop_by_occasion",
+    "bestsellers",
+    "women_spotlight",
+    "men_spotlight",
+    "kids_spotlight",
+    "trust_band",
+    "testimonials",
+    "brand_story",
+    "newsletter"
   ]
 }

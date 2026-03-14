@@ -70,6 +70,10 @@ body {
   }
 }
 
+#MainContent > .section:first-child {
+  margin-top: 0;
+}
+
 /* Typography Polish */
 h1, h2, h3, h4, h5, .h0, .h1, .h2, .h3, .h4, .h5 {
   font-family: var(--font-heading-family);

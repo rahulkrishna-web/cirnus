@@ -13,60 +13,37 @@
     <script src="{{ 'app.js' | asset_url }}" defer="defer"></script>
 
     {%- style -%}
+      @view-transition {
+        navigation: auto;
+      }
+
+      {% for scheme in settings.color_schemes -%}
+        {% if forloop.first -%}
+          :root,
+        {%- endif %}
+        .color-{{ scheme.id }},
+        .color-scheme-{{ forloop.index }} {
+          --color-background: {{ scheme.settings.background }};
+          --color-text-primary: {{ scheme.settings.text }};
+          --color-text-secondary: {{ scheme.settings.text | color_modify: 'alpha', 0.75 }};
+          --color-accent: {{ scheme.settings.secondary_button_label }};
+          --color-border: {{ scheme.settings.text | color_modify: 'alpha', 0.1 }};
+          --color-button: {{ scheme.settings.button }};
+          --color-button-label: {{ scheme.settings.button_label }};
+        }
+      {% endfor %}
+
+      {%- assign header_font = settings.type_header_font -%}
+      {%- assign body_font = settings.type_body_font -%}
+
       :root {
-        /* Default Scheme (Scheme 1) */
-        --color-background: {{ settings.scheme_1_background }};
-        --color-text-primary: {{ settings.scheme_1_text }};
-        --color-text-secondary: {{ settings.scheme_1_text | color_modify: 'alpha', 0.75 }};
-        --color-accent: {{ settings.scheme_1_accent }};
-        --color-border: {{ settings.scheme_1_text | color_modify: 'alpha', 0.1 }};
-        --color-button: {{ settings.scheme_1_button }};
-        --color-button-label: {{ settings.scheme_1_button_label }};
-      }
-
-      .color-scheme-1 {
-        --color-background: {{ settings.scheme_1_background }};
-        --color-text-primary: {{ settings.scheme_1_text }};
-        --color-text-secondary: {{ settings.scheme_1_text | color_modify: 'alpha', 0.75 }};
-        --color-accent: {{ settings.scheme_1_accent }};
-        --color-border: {{ settings.scheme_1_text | color_modify: 'alpha', 0.1 }};
-        --color-button: {{ settings.scheme_1_button }};
-        --color-button-label: {{ settings.scheme_1_button_label }};
-      }
-
-      .color-scheme-2 {
-        --color-background: {{ settings.scheme_2_background }};
-        --color-text-primary: {{ settings.scheme_2_text }};
-        --color-text-secondary: {{ settings.scheme_2_text | color_modify: 'alpha', 0.75 }};
-        --color-accent: {{ settings.scheme_2_accent }};
-        --color-border: {{ settings.scheme_2_text | color_modify: 'alpha', 0.1 }};
-        --color-button: {{ settings.scheme_2_button }};
-        --color-button-label: {{ settings.scheme_2_button_label }};
-      }
-
-      .color-scheme-3 {
-        --color-background: {{ settings.scheme_3_background }};
-        --color-text-primary: {{ settings.scheme_3_text }};
-        --color-text-secondary: {{ settings.scheme_3_text | color_modify: 'alpha', 0.75 }};
-        --color-accent: {{ settings.scheme_3_accent }};
-        --color-border: {{ settings.scheme_3_text | color_modify: 'alpha', 0.1 }};
-        --color-button: {{ settings.scheme_3_button }};
-        --color-button-label: {{ settings.scheme_3_button_label }};
-      }
-
         /* Typography - Font Loading */
-        {%- assign header_font = settings.type_header_font -%}
-        {%- assign body_font = settings.type_body_font -%}
-
         --font-heading-family: {{ header_font.family }}, {{ header_font.fallback_families }};
         --font-body-family: {{ body_font.family }}, {{ body_font.fallback_families }};
-
         --font-body-weight: {{ body_font.weight }};
         --font-heading-weight: {{ header_font.weight }};
-
         --font-scale-heading: {{ settings.heading_scale | divided_by: 100.0 }};
         --font-scale-body: {{ settings.body_scale | divided_by: 100.0 }};
-
         /* Layout */
         --page-width: {{ settings.page_width }}px;
       }
@@ -79,6 +56,34 @@
       {{ body_font | font_face: font_display: 'swap' }}
     {%- endstyle -%}
 
+    <script>
+      window.routes = {
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        cart_url: '{{ routes.cart_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}'
+      };
+
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
+      }
+
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+      }
+
+      function fetchConfig(type = 'json') {
+        return {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': `application/${type}` }
+        };
+      }
+    </script>
+
     {{ content_for_header }}
   </head>
 
@@ -90,5 +95,7 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {% section 'cart-drawer' %}
   </body>
 </html>

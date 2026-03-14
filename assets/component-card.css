@@ -1,4 +1,34 @@
 /* Card Component */
+.ratio {
+  position: relative;
+  display: block;
+}
+
+.ratio::before {
+  content: "";
+  display: block;
+  padding-bottom: var(--ratio-percent, 100%);
+}
+
+.ratio > *:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.media {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.media > img,
+.media > svg {
+  display: block;
+  max-width: 100%;
+}
+
 .card-wrapper {
   color: inherit;
   height: 100%;
@@ -31,6 +61,8 @@
   overflow: hidden;
   z-index: 0;
   border-radius: var(--card-corner-radius, 0);
+  width: 100%;
+  height: 100%;
 }
 
 .card__media img {

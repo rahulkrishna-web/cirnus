@@ -1,0 +1,417 @@
+<div class="collection-slider-section section-{{ section.id }}-padding" style="--columns-desktop: {{ section.settings.columns_desktop | default: 5 }};">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <div class="collection-slider__header">
+        <h2 class="collection-slider__heading h2">{{ section.settings.title | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <collection-slider class="collection-slider__component block">
+      <div class="collection-slider__wrapper">
+        
+        <button type="button" class="collection-slider__arrow collection-slider__arrow--prev" name="previous" aria-label="Previous slide" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+
+        <ul class="collection-slider__track list-unstyled" id="Slider-{{ section.id }}" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'collection' -%}
+              {%- assign slider_collection = block.settings.collection -%}
+              <li class="collection-slider__slide" id="Slide-{{ section.id }}-{{ forloop.index }}" {{ block.shopify_attributes }}>
+                <a 
+                  {% if slider_collection != blank and slider_collection.all_products_count > 0 %} href="{{ slider_collection.url }}"{% else %} role="link" aria-disabled="true"{% endif %} 
+                  class="collection-slider__card collection-slider__card--{{ section.settings.card_shape }}"
+                >
+                  <div class="collection-slider__media">
+                     {%- if slider_collection != blank and slider_collection.featured_image != blank -%}
+                       <img
+                         src="{{ slider_collection.featured_image | image_url: width: 400 }}"
+                         alt="{{ slider_collection.title | escape }}"
+                         {% if forloop.index > 2 %}loading="lazy"{% else %}loading="eager" fetchpriority="high"{% endif %}
+                         height="{{ slider_collection.featured_image.height }}"
+                         width="{{ slider_collection.featured_image.width }}"
+                       >
+                     {%- else -%}
+                       {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg placeholder-svg--collection' }}
+                     {%- endif -%}
+                  </div>
+                  
+                  <div class="collection-slider__content">
+                    <h3 class="collection-slider__title h5">
+                      {%- if slider_collection != blank -%}
+                        {{ slider_collection.title | escape }}
+                      {%- else -%}
+                        {{ 'onboarding.collection_title' | t: default: 'Category title' }}
+                      {%- endif -%}
+                    </h3>
+                    {%- if section.settings.show_count and slider_collection != blank -%}
+                       <span class="collection-slider__count">{{ slider_collection.all_products_count }} {{ 'sections.collection_list.items' | t: default: 'items' }}</span>
+                    {%- endif -%}
+                  </div>
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        <button type="button" class="collection-slider__arrow collection-slider__arrow--next" name="next" aria-label="Next slide">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+
+      </div>
+    </collection-slider>
+  </div>
+</div>
+
+{% stylesheet %}
+  .collection-slider-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .collection-slider__header {
+    margin-bottom: 3rem;
+  }
+
+  .collection-slider__heading {
+    margin: 0;
+  }
+
+  /* Component Container */
+  .collection-slider__component {
+    display: block;
+    position: relative;
+  }
+
+  .collection-slider__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .collection-slider__track {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    width: 100%;
+  }
+
+  .collection-slider__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .collection-slider__slide {
+    scroll-snap-align: start;
+    flex: 0 0 calc(100% / var(--columns-desktop) - 1.5rem + (1.5rem / var(--columns-desktop))); /* Calc precise width minus gap */
+    position: relative;
+  }
+
+  /* Card Styles */
+  .collection-slider__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    gap: 1.5rem;
+  }
+
+  .collection-slider__media {
+    width: 100%;
+    position: relative;
+    border-radius: var(--media-radius, 8px);
+    overflow: hidden;
+    background: rgba(var(--color-foreground), 0.03);
+    /* HW accel */
+    transform: translateZ(0); 
+  }
+
+  .collection-slider__media img,
+  .collection-slider__media svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Shapes */
+  .collection-slider__card--circle .collection-slider__media {
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .collection-slider__card--square .collection-slider__media {
+    aspect-ratio: 1 / 1;
+  }
+
+  .collection-slider__card--portrait .collection-slider__media {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Hover States */
+  .collection-slider__card:hover .collection-slider__media img {
+    transform: scale(1.05);
+  }
+  
+  .collection-slider__card:hover .collection-slider__title {
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+  }
+
+  .collection-slider__content {
+    text-align: center;
+  }
+
+  .collection-slider__title {
+    margin: 0;
+    font-size: 1.6rem;
+  }
+
+  .collection-slider__count {
+    font-size: 1.2rem;
+    color: rgba(var(--color-foreground), 0.7);
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  /* Arrows */
+  .collection-slider__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: rgb(var(--color-background));
+    border: 1px solid rgba(var(--color-foreground), 0.1);
+    color: rgb(var(--color-foreground));
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: none; /* Hidden by default, un-hidden via JS if needed */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+
+  .collection-slider__arrow:hover:not([disabled]) {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+
+  .collection-slider__arrow[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .collection-slider__arrow--prev {
+    left: -22px;
+  }
+
+  .collection-slider__arrow--next {
+    right: -22px;
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    .collection-slider__slide {
+      /* Show 2.5 cards on mobile to hint at scroll */
+      flex: 0 0 calc(40% - 1.5rem); 
+    }
+    
+    .collection-slider__track {
+      /* Break out of page-width container to edge-to-edge scroll */
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      padding-left: 1.5rem;
+      padding-right: 3rem; /* Extra right padding so last item doesn't stick to edge */
+      width: calc(100% + 3rem);
+    }
+
+    /* Important: Never show arrows on touch devices */
+    .collection-slider__arrow {
+      display: none !important; 
+    }
+  }
+
+  /* Desktop hover to show arrows (JS adds class `is-draggable` if track overflows) */
+  @media screen and (min-width: 750px) {
+    .collection-slider__component.is-draggable .collection-slider__arrow {
+       display: flex;
+    }
+    /* Only show arrows on hover over the section for clean UI */
+    .collection-slider__component.is-draggable .collection-slider__arrow {
+       opacity: 0;
+       visibility: hidden;
+    }
+    .collection-slider__component.is-draggable:hover .collection-slider__arrow {
+       opacity: 1;
+       visibility: visible;
+    }
+    .collection-slider__component.is-draggable .collection-slider__arrow[disabled] {
+       opacity: 0;
+       visibility: hidden;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  if (!customElements.get('collection-slider')) {
+    customElements.define('collection-slider', class extends HTMLElement {
+      constructor() {
+        super();
+        this.track = this.querySelector('.collection-slider__track');
+        this.prevButton = this.querySelector('.collection-slider__arrow--prev');
+        this.nextButton = this.querySelector('.collection-slider__arrow--next');
+        
+        if (!this.track) return;
+
+        this.init();
+      }
+
+      init() {
+        // Only run logic if we have elements to scroll
+        this.evaluateArrows();
+        
+        // Debounce resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => this.evaluateArrows(), 250);
+        });
+
+        this.track.addEventListener('scroll', () => {
+          this.updateArrowStates();
+        }, { passive: true });
+
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.scrollByDirection(-1));
+        }
+
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.scrollByDirection(1));
+        }
+      }
+
+      evaluateArrows() {
+        // If content is wider than container, we can scroll
+        const canScroll = this.track.scrollWidth > this.track.clientWidth;
+        
+        if (canScroll) {
+          this.classList.add('is-draggable');
+          this.updateArrowStates();
+        } else {
+          this.classList.remove('is-draggable');
+        }
+      }
+
+      updateArrowStates() {
+        if (!this.prevButton || !this.nextButton) return;
+        
+        // Disable Prev if at start
+        if (this.track.scrollLeft <= 5) {
+          this.prevButton.setAttribute('disabled', 'disabled');
+        } else {
+          this.prevButton.removeAttribute('disabled');
+        }
+
+        // Disable Next if at end
+        if (this.track.scrollLeft + this.track.clientWidth >= this.track.scrollWidth - 5) {
+          this.nextButton.setAttribute('disabled', 'disabled');
+        } else {
+          this.nextButton.removeAttribute('disabled');
+        }
+      }
+
+      scrollByDirection(direction) {
+        // Scroll by one full clientWidth roughly (or calculate slide width)
+        const slideWidth = this.querySelector('.collection-slider__slide').clientWidth || 200;
+        const gap = 15; // 1.5rem
+        
+        // Scroll by roughly 2 items for a faster jump, or container width
+        const scrollAmount = (slideWidth + gap) * 2 * direction;
+        
+        this.track.scrollBy({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection Slider",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Browse Categories"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "label": "Desktop visible items",
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "card_shape",
+      "label": "Thumbnail shape",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (3:4)" }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show product count",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Slider",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}

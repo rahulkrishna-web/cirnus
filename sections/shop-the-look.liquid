@@ -1,0 +1,391 @@
+<div class="shop-the-look section-{{ section.id }}-padding">
+  <div class="page-width">
+    <div class="shop-the-look__container">
+      {%- if section.settings.image != blank -%}
+        <div class="shop-the-look__image-wrapper" style="padding-top: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;">
+          <img
+            srcset="
+              {%- if section.settings.image.width >= 550 -%}{{ section.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
+              {%- if section.settings.image.width >= 720 -%}{{ section.settings.image | image_url: width: 720 }} 720w,{%- endif -%}
+              {%- if section.settings.image.width >= 990 -%}{{ section.settings.image | image_url: width: 990 }} 990w,{%- endif -%}
+              {%- if section.settings.image.width >= 1100 -%}{{ section.settings.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+              {%- if section.settings.image.width >= 1500 -%}{{ section.settings.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+              {%- if section.settings.image.width >= 2200 -%}{{ section.settings.image | image_url: width: 2200 }} 2200w,{%- endif -%}
+              {%- if section.settings.image.width >= 3000 -%}{{ section.settings.image | image_url: width: 3000 }} 3000w,{%- endif -%}
+              {{ section.settings.image | image_url }} {{ section.settings.image.width }}w
+            "
+            src="{{ section.settings.image | image_url: width: 1500 }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            loading="lazy"
+            height="{{ section.settings.image.height }}"
+            width="{{ section.settings.image.width }}"
+            class="shop-the-look__image"
+          >
+          
+          {%- for block in section.blocks -%}
+            {%- assign target_product = block.settings.product -%}
+            {%- if target_product != blank -%}
+              <div 
+                class="shop-the-look__hotspot" 
+                style="--hotspot-x: {{ block.settings.x_pos }}%; --hotspot-y: {{ block.settings.y_pos }}%;"
+                {{ block.shopify_attributes }}
+              >
+                <button 
+                  type="button" 
+                  class="shop-the-look__pin icon-{{ section.settings.hotspot_icon }}"
+                  aria-expanded="false"
+                  aria-controls="Popover-{{ section.id }}-{{ block.id }}"
+                  data-target="Popover-{{ section.id }}-{{ block.id }}"
+                >
+                   {%- if section.settings.hotspot_icon == 'plus' -%}
+                     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                   {%- else -%}
+                     <span class="visually-hidden">View product</span>
+                   {%- endif -%}
+                </button>
+                
+                <div 
+                  id="Popover-{{ section.id }}-{{ block.id }}" 
+                  class="shop-the-look__popover shop-the-look__popover--{{ block.settings.x_pos | split: '.' | first | plus: 0 | round | minus: 50 | abs | divided_by: 50.0 | round: 0 | replace: 0, 'right' | replace: 1, 'left' }}"
+                  role="dialog"
+                  aria-modal="true"
+                  hidden
+                >
+                  <button type="button" class="shop-the-look__popover-close" aria-label="Close">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                  <div class="shop-the-look__product-mini">
+                     {%- if target_product.featured_media -%}
+                       <img src="{{ target_product.featured_media | image_url: width: 100 }}" alt="{{ target_product.title | escape }}" width="80" height="80" loading="lazy">
+                     {%- endif -%}
+                     <div class="shop-the-look__product-info">
+                       <h4 class="h5"><a href="{{ target_product.url }}">{{ target_product.title | escape }}</a></h4>
+                       <span class="price">{{ target_product.price | money }}</span>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div class="shop-the-look__image-wrapper placeholder">
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .shop-the-look {
+    display: block;
+    position: relative;
+    width: 100%;
+  }
+
+  .shop-the-look__image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--media-radius, 8px);
+  }
+
+  .shop-the-look__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .shop-the-look__hotspot {
+    position: absolute;
+    left: var(--hotspot-x, 50%);
+    top: var(--hotspot-y, 50%);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .shop-the-look__pin {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    color: #000;
+  }
+
+  .shop-the-look__pin:hover,
+  .shop-the-look__pin[aria-expanded="true"] {
+    transform: scale(1.1);
+    background: #fff;
+  }
+
+  .shop-the-look__pin::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    z-index: -1;
+    animation: ripple 2s infinite ease-out;
+  }
+
+  @keyframes ripple {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  .shop-the-look__popover {
+    position: absolute;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    width: max-content;
+    max-width: 280px;
+    z-index: 10;
+    top: calc(100% + 15px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  /* Triangle Pointer */
+  .shop-the-look__popover::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 5px rgba(0,0,0,0.04);
+  }
+
+  /* Directional Logic based on Block Settings */
+  .shop-the-look__popover--right {
+    left: 50%; /* Anchor left side of popover effectively pushing it right */
+    transform: translateX(-20px); 
+  }
+  .shop-the-look__popover--right::before {
+    left: 15px; 
+  }
+  
+  .shop-the-look__popover--left {
+    right: 50%; /* Anchor right side pushing it left */
+    transform: translateX(20px);
+  }
+  .shop-the-look__popover--left::before {
+    right: 15px;
+  }
+
+  .shop-the-look__popover[hidden] {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .shop-the-look__popover-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(var(--color-foreground), 0.5);
+    padding: 0.5rem;
+  }
+
+  .shop-the-look__product-mini {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-right: 1.5rem; /* space for close button */
+  }
+
+  .shop-the-look__product-mini img {
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  .shop-the-look__product-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  .shop-the-look__product-info a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .shop-the-look__product-info a:hover {
+    text-decoration: underline;
+  }
+
+  @media screen and (max-width: 749px) {
+    /* Bottom Sheet Fallback for Mobile */
+    .shop-the-look__popover {
+      position: fixed;
+      bottom: 0;
+      left: 0 !important;
+      right: 0 !important;
+      top: auto;
+      width: 100%;
+      max-width: 100%;
+      transform: translateY(100%);
+      border-radius: 16px 16px 0 0;
+      padding: 2rem;
+      z-index: 100;
+    }
+
+    .shop-the-look__popover:not([hidden]) {
+      transform: translateY(0);
+      animation: slideUp 0.3s ease-out forwards;
+    }
+
+    .shop-the-look__popover::before {
+      display: none;
+    }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+{% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.querySelector('.shop-the-look');
+    if (!section) return;
+
+    const pins = section.querySelectorAll('.shop-the-look__pin');
+    let activePopover = null;
+
+    pins.forEach(pin => {
+      pin.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = pin.getAttribute('data-target');
+        const popover = document.getElementById(targetId);
+        
+        // Close currently active popover if it's different
+        if (activePopover && activePopover !== popover) {
+          activePopover.hidden = true;
+          const activePin = section.querySelector(`[data-target="${activePopover.id}"]`);
+          if (activePin) activePin.setAttribute('aria-expanded', 'false');
+        }
+
+        // Toggle current popover
+        const isHidden = popover.hidden;
+        popover.hidden = !isHidden;
+        pin.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+        
+        if (isHidden) {
+          activePopover = popover;
+        } else {
+          activePopover = null;
+        }
+      });
+    });
+
+    // Close logic
+    section.addEventListener('click', (e) => {
+      // Close button clicked inside popover
+      if (e.target.closest('.shop-the-look__popover-close')) {
+        const popover = e.target.closest('.shop-the-look__popover');
+        popover.hidden = true;
+        const pin = section.querySelector(`[data-target="${popover.id}"]`);
+        if (pin) pin.setAttribute('aria-expanded', 'false');
+        activePopover = null;
+      }
+    });
+
+    // Click outside to close
+    document.addEventListener('click', (e) => {
+      if (activePopover && !e.target.closest('.shop-the-look__hotspot')) {
+        activePopover.hidden = true;
+        const pin = section.querySelector(`[data-target="${activePopover.id}"]`);
+        if (pin) pin.setAttribute('aria-expanded', 'false');
+        activePopover = null;
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Shop the Look",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main Image"
+    },
+    {
+      "type": "select",
+      "id": "hotspot_icon",
+      "label": "Pin Style",
+      "options": [
+        { "value": "plus", "label": "Plus" },
+        { "value": "circle", "label": "Circle" }
+      ],
+      "default": "plus"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Target Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "range",
+          "id": "x_pos",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal Position",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y_pos",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical Position",
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop the Look",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

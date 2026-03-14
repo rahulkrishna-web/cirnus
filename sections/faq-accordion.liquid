@@ -1,0 +1,261 @@
+<div class="faq-accordion section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width page-width--narrow">
+    
+    {%- if section.settings.title != blank -%}
+      <div class="faq-accordion__header">
+        <h2 class="faq-accordion__heading h2">{{ section.settings.title | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="faq-accordion__wrapper">
+      {%- for block in section.blocks -%}
+        
+        <details class="faq-accordion__item" id="Details-{{ block.id }}-{{ section.id }}" {% if section.settings.expand_first and forloop.first %}open{% endif %} {{ block.shopify_attributes }}>
+          <summary class="faq-accordion__toggle">
+            <h3 class="faq-accordion__title h4">{{ block.settings.title | escape }}</h3>
+            <span class="faq-accordion__icon">
+              <!-- Plus Icon -->
+              <svg class="icon icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <!-- Minus Icon (Hidden by default, shown when details open) -->
+              <svg class="icon icon-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </span>
+          </summary>
+          <div class="faq-accordion__content rte" id="FAQ-{{ block.id }}-{{ section.id }}">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+        
+      {%- endfor -%}
+    </div>
+    
+  </div>
+</div>
+
+/* Generate automated FAQ JSON-LD Schema for Google */
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in section.blocks -%}
+      {
+        "@type": "Question",
+        "name": {{ block.settings.title | escape | json }},
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": {{ block.settings.answer | strip_html | json }}
+        }
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+
+{% stylesheet %}
+  .faq-accordion {
+    display: block;
+    margin: 4rem 0;
+  }
+
+  .page-width--narrow {
+    max-width: 80rem;
+    margin: 0 auto;
+  }
+
+  .faq-accordion__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .faq-accordion__heading {
+    margin: 0;
+  }
+
+  .faq-accordion__wrapper {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(var(--color-foreground), 0.1);
+  }
+
+  .faq-accordion__item {
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.1);
+  }
+
+  /* Target the toggle button */
+  .faq-accordion__toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5rem 0;
+    cursor: pointer;
+    list-style: none; /* Hide default triangle */
+    outline: none;
+    transition: background-color 0.2s ease;
+  }
+
+  /* Remove default Safari details marker */
+  .faq-accordion__toggle::-webkit-details-marker {
+    display: none;
+  }
+  
+  .faq-accordion__toggle:focus-visible {
+    box-shadow: inset 0 0 0 2px rgb(var(--color-foreground));
+    border-radius: 4px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .faq-accordion__title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 500;
+  }
+
+  .faq-accordion__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    color: rgb(var(--color-foreground));
+    flex-shrink: 0;
+    margin-left: 2rem;
+  }
+
+  .faq-accordion__icon svg {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+  }
+
+  .icon-minus {
+    display: none;
+  }
+
+  /* Content Area */
+  .faq-accordion__content {
+    padding-bottom: 3rem;
+    padding-right: 4.4rem; /* Match icon width+margin to align text cleanly */
+    color: rgba(var(--color-foreground), 0.8);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    /* Basic fade in CSS, complex height sliding requires JS if needed, we prioritize zero-JS */
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .faq-accordion__content p:first-child { margin-top: 0; }
+  .faq-accordion__content p:last-child { margin-bottom: 0; }
+
+  /* Open State Icon Toggles */
+  details[open] .faq-accordion__item {
+    background-color: rgba(var(--color-foreground), 0.02);
+  }
+
+  details[open] > .faq-accordion__toggle .icon-plus {
+    display: none;
+  }
+
+  details[open] > .faq-accordion__toggle .icon-minus {
+    display: block;
+    /* Add subtle spin animation on open */
+    animation: spinRotate 0.3s ease;
+  }
+  
+  @keyframes spinRotate {
+    from { transform: rotate(-90deg); }
+    to { transform: rotate(0deg); }
+  }
+{% endstylesheet %}
+
+{%- if section.settings.allow_multi_open == false -%}
+<script>
+  // Tiny Progressive enhancement script if strict single-open constraint is enabled
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('shopify-section-{{ section.id }}');
+    if(!section) return;
+    
+    const details = section.querySelectorAll('details.faq-accordion__item');
+    details.forEach((targetDetail) => {
+      targetDetail.addEventListener('click', () => {
+        // Close all others on click
+        details.forEach((detail) => {
+          if (detail !== targetDetail) {
+            detail.removeAttribute('open');
+          }
+        });
+      });
+    });
+  });
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ Accordion",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Frequently Asked Questions",
+      "label": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "expand_first",
+      "default": false,
+      "label": "Open first question on load"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_multi_open",
+      "default": true,
+      "label": "Allow multiple questions open",
+      "info": "If disabled, opening one question closes all others."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Frequently asked question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "default": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Accordion",
+      "blocks": [
+        { "type": "question" },
+        { "type": "question" },
+        { "type": "question" },
+        { "type": "question" }
+      ]
+    }
+  ]
+}
+{% endschema %}

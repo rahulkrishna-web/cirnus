@@ -1,0 +1,357 @@
+<div class="back-in-stock section-{{ section.id }}-padding">
+  {%- assign is_available = product.selected_or_first_available_variant.available -%}
+  
+  <div class="back-in-stock__trigger-wrapper" {% if is_available and section.settings.auto_open == false %}hidden{% endif %} id="BackInStockTrigger-{{ section.id }}">
+    <button type="button" class="back-in-stock__trigger link" aria-haspopup="dialog" aria-controls="BackInStockModal-{{ section.id }}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      {{ 'products.product.notify_me' | t: default: section.settings.button_text }}
+    </button>
+  </div>
+
+  <back-in-stock-modal>
+    <div 
+      id="BackInStockModal-{{ section.id }}" 
+      class="back-in-stock__modal {% if section.settings.modal_mode %}back-in-stock__modal--overlay{% else %}back-in-stock__modal--inline{% endif %}"
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="BackInStockHeading-{{ section.id }}"
+      hidden
+    >
+      <div class="back-in-stock__dialog">
+        {%- if section.settings.modal_mode -%}
+          <button type="button" class="back-in-stock__close" aria-label="Close" data-action="close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        {%- endif -%}
+
+        <div class="back-in-stock__content">
+          <h3 id="BackInStockHeading-{{ section.id }}" class="h4">{{ 'products.product.notify_me_when_available' | t: default: 'Notify me when available' }}</h3>
+          
+          <p class="back-in-stock__subtitle">
+            <span class="back-in-stock__product-name">{{ product.title }}</span>
+            <span class="back-in-stock__variant-name" id="BackInStockVariant-{{ section.id }}">
+               {%- unless product.has_only_default_variant -%}
+                 - {{ product.selected_or_first_available_variant.title }}
+               {%- endunless -%}
+            </span>
+          </p>
+
+          {%- form 'contact', id: 'BackInStockForm' -%}
+            {%- if form.posted_successfully? -%}
+              <div class="form-status form-status-list form__message" tabindex="-1" autofocus>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                {{ 'templates.contact.form.post_success' | t: default: "You're on the list! We'll email you when it's back." }}
+              </div>
+            {%- else -%}
+              {%- if form.errors -%}
+                <div class="form__message" role="alert">
+                  <h3 class="form-status caption-large text-body" tabindex="-1" autofocus>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    {{ 'templates.contact.form.error_heading' | t }}
+                  </h3>
+                  <ul class="form-status-list caption-large">
+                    {%- for field in form.errors -%}
+                      <li>
+                        <a href="#ContactForm-{{ field }}">
+                          {{ form.errors.translated_fields[field] | capitalize }}
+                          {{ form.errors.messages[field] }}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+
+              <input type="hidden" name="contact[body]" value="Please notify me when {{ product.title | escape }} - {variant_title} is back in stock." id="BackInStockBody-{{ section.id }}">
+              
+              <div class="field">
+                <input 
+                  type="email" 
+                  name="contact[email]" 
+                  id="ContactForm-email-{{ section.id }}" 
+                  class="field__input"
+                  value="{% if customer %}{{ customer.email }}{% endif %}" 
+                  spellcheck="false" 
+                  autocapitalize="off" 
+                  autocomplete="email" 
+                  aria-required="true"
+                  placeholder="Email"
+                  required
+                >
+                <label class="field__label" for="ContactForm-email-{{ section.id }}">Email</label>
+              </div>
+
+              {%- if section.settings.marketing_consent -%}
+                <div class="back-in-stock__consent">
+                  <input type="checkbox" id="ContactForm-consent-{{ section.id }}" name="contact[accepts_marketing]" checked>
+                  <label for="ContactForm-consent-{{ section.id }}">Sign me up for news and exclusive offers.</label>
+                </div>
+              {%- endif -%}
+
+              <button type="submit" class="button button--full-width button--primary">
+                {{ section.settings.button_text }}
+              </button>
+            {%- endif -%}
+          {%- endform -%}
+          
+        </div>
+      </div>
+    </div>
+  </back-in-stock-modal>
+</div>
+
+{% stylesheet %}
+  .back-in-stock__trigger-wrapper {
+    margin: 1.5rem 0;
+  }
+  
+  .back-in-stock__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    color: rgba(var(--color-foreground), 0.8);
+    transition: color 0.2s ease;
+  }
+  
+  .back-in-stock__trigger:hover {
+    color: rgba(var(--color-foreground), 1);
+  }
+
+  /* Inline Mode */
+  .back-in-stock__modal--inline {
+    background: rgba(var(--color-foreground), 0.03);
+    border-radius: var(--media-radius, 8px);
+    padding: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  .back-in-stock__modal--inline[hidden] {
+    display: none;
+  }
+
+  .back-in-stock__modal--inline .back-in-stock__dialog {
+    max-width: 100%;
+  }
+
+  /* Modal Mode */
+  .back-in-stock__modal--overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: rgba(var(--color-foreground), 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .back-in-stock__modal--overlay[hidden] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .back-in-stock__modal--overlay .back-in-stock__dialog {
+    background: rgb(var(--color-background));
+    border-radius: var(--media-radius, 12px);
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .back-in-stock__modal--overlay[hidden] .back-in-stock__dialog {
+    transform: translateY(20px);
+  }
+
+  .back-in-stock__content {
+    padding: 3rem;
+  }
+
+  .back-in-stock__close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: rgba(var(--color-foreground), 0.5);
+    transition: color 0.2s ease;
+    z-index: 2;
+  }
+
+  .back-in-stock__close:hover {
+    color: rgba(var(--color-foreground), 1);
+  }
+
+  .back-in-stock h3 {
+    margin: 0 0 1rem;
+  }
+
+  .back-in-stock__subtitle {
+    margin: 0 0 2rem;
+    font-size: 1.4rem;
+    color: rgba(var(--color-foreground), 0.7);
+    line-height: 1.4;
+  }
+
+  .back-in-stock__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.7);
+  }
+
+  .back-in-stock__consent input[type="checkbox"] {
+    margin-top: 0.3rem;
+    accent-color: rgba(var(--color-foreground), 1);
+  }
+{% endstylesheet %}
+
+<script>
+  if (!customElements.get('back-in-stock-modal')) {
+    customElements.define('back-in-stock-modal', class extends HTMLElement {
+      constructor() {
+        super();
+        this.sectionId = '{{ section.id }}';
+        this.modal = this.querySelector(`#BackInStockModal-${this.sectionId}`);
+        this.trigger = document.querySelector(`#BackInStockTrigger-${this.sectionId} button`);
+        this.closeBtn = this.querySelector('[data-action="close"]');
+        this.bodyInput = this.querySelector(`#BackInStockBody-${this.sectionId}`);
+        this.variantNameElem = this.querySelector(`#BackInStockVariant-${this.sectionId}`);
+        
+        // Listen internally if form submitted successfully and modal mode is active to show success message
+        const isSuccess = !!this.querySelector('.form-status-list');
+        const isError = !!this.querySelector('.form__message[role="alert"]');
+        
+        if(isSuccess || isError) {
+          this.open();
+        }
+
+        this.bindEvents();
+      }
+
+      bindEvents() {
+        if (this.trigger) {
+          this.trigger.addEventListener('click', this.open.bind(this));
+        }
+
+        if (this.closeBtn) {
+          this.closeBtn.addEventListener('click', this.close.bind(this));
+        }
+
+        // Close on overlay click
+        if (this.modal.classList.contains('back-in-stock__modal--overlay')) {
+          this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) this.close();
+          });
+
+          // Close on Escape key
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !this.modal.hidden) this.close();
+          });
+        }
+        
+        // Listen to variant changes from global theme logic (via product-info.js)
+        document.addEventListener('variant:change', (e) => {
+           if (!e.detail.variant) return;
+           const isAvailable = e.detail.variant.available;
+           
+           // Toggle Trigger Button
+           const triggerWrapper = document.querySelector(`#BackInStockTrigger-${this.sectionId}`);
+           if (triggerWrapper) {
+              if(!isAvailable) {
+                 triggerWrapper.hidden = false;
+              } else {
+                 triggerWrapper.hidden = {{ section.settings.auto_open | default: false }};
+              }
+           }
+           
+           // Update Hidden Input Value & UI text
+           if (this.bodyInput && this.variantNameElem) {
+              const baseText = this.bodyInput.value.split(' - ')[0]; 
+              this.bodyInput.value = `${baseText} - ${e.detail.variant.title} is back in stock.`;
+              this.variantNameElem.textContent = ` - ${e.detail.variant.title}`;
+           }
+        });
+      }
+
+      open() {
+        this.modal.hidden = false;
+        
+        // Trap focus
+        if (this.modal.classList.contains('back-in-stock__modal--overlay')) {
+           document.body.style.overflow = 'hidden';
+           const input = this.querySelector('input[type="email"]');
+           if (input) input.focus();
+        }
+      }
+
+      close() {
+        this.modal.hidden = true;
+        if (this.modal.classList.contains('back-in-stock__modal--overlay')) {
+           document.body.style.overflow = '';
+           if (this.trigger) this.trigger.focus();
+        }
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Back-in-Stock Form",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "modal_mode",
+      "label": "Use Modal Overlay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_open",
+      "label": "Show button even if available",
+      "info": "Useful for generating pre-orders",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "marketing_consent",
+      "label": "Show Marketing Consent",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Notify Me"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Back In Stock Form"
+    }
+  ]
+}
+{% endschema %}

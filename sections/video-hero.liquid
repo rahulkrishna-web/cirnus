@@ -1,0 +1,301 @@
+<div class="video-hero section-{{ section.id }}-padding" style="--overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
+  <div class="video-hero__container {% if section.settings.full_width %}video-hero__container--full{% else %}page-width{% endif %}">
+    
+    <div class="video-hero__media-wrapper">
+      {%- if section.settings.poster_image != blank -%}
+        <img
+          srcset="
+            {%- if section.settings.poster_image.width >= 550 -%}{{ section.settings.poster_image | image_url: width: 550 }} 550w,{%- endif -%}
+            {%- if section.settings.poster_image.width >= 720 -%}{{ section.settings.poster_image | image_url: width: 720 }} 720w,{%- endif -%}
+            {%- if section.settings.poster_image.width >= 990 -%}{{ section.settings.poster_image | image_url: width: 990 }} 990w,{%- endif -%}
+            {%- if section.settings.poster_image.width >= 1500 -%}{{ section.settings.poster_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if section.settings.poster_image.width >= 2200 -%}{{ section.settings.poster_image | image_url: width: 2200 }} 2200w,{%- endif -%}
+            {%- if section.settings.poster_image.width >= 3000 -%}{{ section.settings.poster_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+            {{ section.settings.poster_image | image_url }} {{ section.settings.poster_image.width }}w
+          "
+          src="{{ section.settings.poster_image | image_url: width: 1500 }}"
+          sizes="100vw"
+          alt="{{ section.settings.poster_image.alt | escape | default: section.settings.heading | escape }}"
+          class="video-hero__poster"
+          /* Crucial LCP optimizations. Eager-load the highly compressed image immediately, let the massive video stream later. */
+          fetchpriority="high" 
+          loading="eager"
+          width="{{ section.settings.poster_image.width }}"
+          height="{{ section.settings.poster_image.height }}"
+        >
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg video-hero__poster' }}
+      {%- endif -%}
+
+      <deferred-media class="video-hero__deferred-media" data-media-id="{{ section.settings.hosted_video.id | default: section.settings.video_url.id }}">
+        
+        <template>
+          {%- if section.settings.hosted_video != blank -%}
+            {{ section.settings.hosted_video | video_tag: 
+               autoplay: true, 
+               loop: true, 
+               controls: false, 
+               muted: true,
+               playsinline: true,
+               preload: "metadata", 
+               image_size: "100x",
+               class: 'video-hero__video'
+            }}
+          {%- elsif section.settings.video_url != blank -%}
+             {%- if section.settings.video_url.type == 'youtube' -%}
+               <iframe src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist={{ section.settings.video_url.id }}&controls=0&showinfo=0&rel=0&modestbranding=1" class="video-hero__video" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.settings.heading | escape }}"></iframe>
+             {%- elsif section.settings.video_url.type == 'vimeo' -%}
+               <iframe src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}?autoplay=1&loop=1&muted=1&background=1" class="video-hero__video" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.settings.heading | escape }}"></iframe>
+             {%- endif -%}
+          {%- endif -%}
+        </template>
+        
+        <noscript>
+          {%- if section.settings.hosted_video != blank -%}
+            {{ section.settings.hosted_video | video_tag: autoplay: true, loop: true, controls: false, muted: true, class: 'video-hero__video' }}
+          {%- endif -%}
+        </noscript>
+      </deferred-media>
+    </div>
+
+    <div class="video-hero__content color-{{ section.settings.color_scheme }} gradient">
+      <div class="video-hero__content-inner">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="video-hero__heading h1">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        
+        {%- if section.settings.text != blank -%}
+          <div class="video-hero__text">
+            {{ section.settings.text }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank -%}
+          <div class="video-hero__buttons">
+            <a href="{{ section.settings.button_link }}" class="button button--primary" {% if section.settings.button_link == blank %} aria-disabled="true"{% endif %}>
+              {{ section.settings.button_label | escape }}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+{% stylesheet %}
+  .video-hero {
+    position: relative;
+    display: block;
+  }
+  
+  .video-hero__container {
+    position: relative;
+    height: 100vh;
+    min-height: 400px;
+    max-height: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .video-hero__container:not(.video-hero__container--full) {
+    border-radius: var(--media-radius, 8px);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    height: calc(100vh - 4rem);
+  }
+
+  .video-hero__media-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: #000;
+  }
+
+  .video-hero__media-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0, var(--overlay-opacity, 0.3));
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .video-hero__poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .video-hero__deferred-media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* Sits above poster once loaded */
+  }
+
+  .video-hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none; /* Let clicks pass to overlays if needed */
+    border: none;
+  }
+  
+  /* Iframe scaling fixes to preserve cover aspect */
+  iframe.video-hero__video {
+    transform: scale(1.5); /* Prevents black bars on external iframes acting as backgrounds */
+  }
+
+  .video-hero__content {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    padding: 2rem;
+    max-width: 800px;
+    color: rgb(var(--color-foreground));
+  }
+  
+  /* If no explicit scheme is set via class, fallback to white for contrast against dark overlays */
+  .video-hero__content:not([class*="color-"]) {
+    color: #fff;
+  }
+
+  .video-hero__heading {
+    margin: 0 0 1.5rem;
+    font-size: clamp(3.2rem, 5vw, 6.4rem);
+    line-height: 1.1;
+  }
+
+  .video-hero__text {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+  }
+{% endstylesheet %}
+
+<script>
+  if (!customElements.get('deferred-media')) {
+    customElements.define('deferred-media', class extends HTMLElement {
+      constructor() {
+        super();
+        
+        // Respect user OS preferences
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+           return; // Do not load video if motion is reduced, leave poster image.
+        }
+
+        // Delay parsing of heavy iframes/videos until slightly after window load to preserve main thread INP/LCP
+        window.addEventListener('load', () => {
+           // Small buffer to guarantee LCP processes the poster image first
+           setTimeout(this.loadContent.bind(this), 250); 
+        });
+      }
+
+      loadContent() {
+        const template = this.querySelector('template');
+        if (!template) return;
+        
+        const content = template.content.cloneNode(true);
+        this.appendChild(content);
+        template.remove();
+        
+        // Once video plays, we could optionally fade out the poster, but the z-index stack handles overlay automatically
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Video Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Make section full width",
+      "default": true
+    },
+    {
+      "type": "video",
+      "id": "hosted_video",
+      "label": "Shopify-hosted video",
+      "info": "Overrides External URL if both are provided."
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": ["youtube", "vimeo"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "label": "External video URL",
+      "info": "Fallback if no Shopify-hosted video selected."
+    },
+    {
+      "type": "image_picker",
+      "id": "poster_image",
+      "label": "Cover image (Required)",
+      "info": "Crucial for page load speed. Shows while the video is downloading or on devices processing reduced motion."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image/Video overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Text color scheme",
+      "default": "scheme-1",
+      "info": "Ensure contrast against the video background."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Video Hero",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Share your brand story using background cinematic video</p>",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Shop Now",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Hero"
+    }
+  ]
+}
+{% endschema %}

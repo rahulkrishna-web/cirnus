@@ -1,13 +1,150 @@
-{{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
+{% stylesheet %}
+  .slideshow {
+    position: relative;
+    overflow: hidden;
+  }
 
-{%- style -%}
-  .section-{{ section.id }}-padding {
+  .slideshow__viewport {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    scrollbar-width: none;
+  }
+  
+  .slideshow__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slideshow__slide {
+    width: 100%;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slideshow__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .slideshow__media img,
+  .slideshow__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .slideshow__content {
+    position: relative;
+    z-index: 3;
+    padding: 3rem;
+    text-align: center;
+    color: #fff; /* Default, should ideally be configurable */
+    pointer-events: none; /* Let clicks pass through to link if needed */
+  }
+
+  .slideshow__content-box {
+    background: rgba(var(--color-background), 0.8);
+    padding: 2rem;
+    border-radius: var(--inputs-radius, 0);
+    pointer-events: auto;
+    display: inline-block;
+  }
+
+  .slideshow__title {
+    margin: 0 0 1rem;
+    color: inherit;
+  }
+
+  .slideshow__text {
+    margin-bottom: 2rem;
+  }
+
+  .slideshow__link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+  
+  .slideshow__controls {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 4;
+  }
+
+  .slideshow__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .slideshow__dot--active {
+    background: #fff;
+  }
+
+  .slideshow__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: none; /* Hidden on mobile by default */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #000;
+  }
+
+  @media screen and (min-width: 750px) {
+    .slideshow:hover .slideshow__arrow {
+      display: flex;
+    }
+  }
+
+  .slideshow__arrow--prev {
+    left: 2rem;
+  }
+
+  .slideshow__arrow--next {
+    right: 2rem;
+  }
+{% endstylesheet %}
+
+<style>
+  #shopify-section-{{ section.id }} .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
 
   @media screen and (min-width: 750px) {
-    .section-{{ section.id }}-padding {
+    #shopify-section-{{ section.id }} .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
@@ -47,13 +184,12 @@
       }
     }
   {% endif %}
-{%- endstyle -%}
+</style>
 
 <div class="color-scheme-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
-  <div
+  <slideshow-component
     id="Slideshow-{{ section.id }}"
     class="slideshow {% if section.settings.card_style %}slideshow--card{% endif %} {% if section.settings.style == 'premium' %}slideshow--premium{% endif %}"
-    data-slideshow
     data-autoplay="{{ section.settings.autoplay_speed }}"
   >
     <div class="slideshow__viewport">
@@ -161,6 +297,7 @@
           <button
             class="slideshow__dot{% if forloop.first %} slideshow__dot--active{% endif %}"
             aria-label="Go to slide {{ forloop.index }}"
+            data-index="{{ forloop.index0 }}"
           ></button>
         {%- endfor -%}
       </div>
@@ -196,32 +333,84 @@
         </svg>
       </button>
     {%- endif -%}
-  </div>
+  </slideshow-component>
 </div>
 
-{%- comment -%}
-  Lazy-load enhancement JS.
-  No JS runs on page load — baseline is CSS scroll-snap.
-  JS enhances: arrow clicks, dot sync, autoplay.
-{%- endcomment -%}
 {%- if section.blocks.size > 1 -%}
   <script>
-    (function() {
-      var loaded = false;
-      function load() {
-        if (loaded) return;
-        loaded = true;
-        var s = document.createElement('script');
-        s.src = {{ 'slideshow-enhance.js' | asset_url | json }};
-        document.head.appendChild(s);
-      }
-      // Load on first interaction or idle
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(load, { timeout: 3000 });
-      } else {
-        setTimeout(load, 2000);
-      }
-    })();
+    if (!customElements.get('slideshow-component')) {
+      customElements.define('slideshow-component', class extends HTMLElement {
+        constructor() {
+          super();
+          this.viewport = this.querySelector('.slideshow__viewport');
+          this.slides = this.querySelectorAll('.slideshow__slide');
+          this.dots = this.querySelectorAll('.slideshow__dot');
+          this.prevBtn = this.querySelector('.slideshow__arrow--prev');
+          this.nextBtn = this.querySelector('.slideshow__arrow--next');
+          this.autoplaySpeed = parseInt(this.dataset.autoplay) * 1000;
+          this.currentIndex = 0;
+          
+          this.bindEvents();
+          if (this.autoplaySpeed > 0) {
+            this.initAutoplay();
+          }
+        }
+
+        bindEvents() {
+          // Intersection Observer to detect active slide via CSS scroll-snap
+          this.observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const index = Array.from(this.slides).indexOf(entry.target);
+                this.updateActiveDot(index);
+                this.currentIndex = index;
+              }
+            });
+          }, { root: this.viewport, threshold: 0.5 });
+          
+          this.slides.forEach(slide => this.observer.observe(slide));
+
+          if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.scrollToSlide(this.currentIndex - 1));
+          if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.scrollToSlide(this.currentIndex + 1));
+          
+          this.dots.forEach(dot => {
+            dot.addEventListener('click', (e) => this.scrollToSlide(parseInt(e.target.dataset.index)));
+          });
+
+          // Pause autoplay on interaction
+          this.addEventListener('mouseenter', () => this.pauseAutoplay());
+          this.addEventListener('mouseleave', () => this.resumeAutoplay());
+          this.viewport.addEventListener('touchstart', () => this.pauseAutoplay(), { passive: true });
+        }
+
+        scrollToSlide(index) {
+          if (index < 0) index = this.slides.length - 1;
+          if (index >= this.slides.length) index = 0;
+          
+          this.slides[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        }
+
+        updateActiveDot(index) {
+          if (!this.dots.length) return;
+          this.dots.forEach(dot => dot.classList.remove('slideshow__dot--active'));
+          this.dots[index].classList.add('slideshow__dot--active');
+        }
+
+        initAutoplay() {
+          this.autoplayInterval = setInterval(() => {
+            this.scrollToSlide(this.currentIndex + 1);
+          }, this.autoplaySpeed);
+        }
+
+        pauseAutoplay() {
+          if (this.autoplayInterval) clearInterval(this.autoplayInterval);
+        }
+
+        resumeAutoplay() {
+          if (this.autoplaySpeed > 0) this.initAutoplay();
+        }
+      });
+    }
   </script>
 {%- endif -%}
 
