@@ -386,8 +386,14 @@
         scrollToSlide(index) {
           if (index < 0) index = this.slides.length - 1;
           if (index >= this.slides.length) index = 0;
-          
-          this.slides[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+
+          const slide = this.slides[index];
+          const left = slide.offsetLeft - this.viewport.offsetLeft;
+
+          this.viewport.scrollTo({
+            left,
+            behavior: 'smooth'
+          });
         }
 
         updateActiveDot(index) {
@@ -397,6 +403,7 @@
         }
 
         initAutoplay() {
+          this.pauseAutoplay();
           this.autoplayInterval = setInterval(() => {
             this.scrollToSlide(this.currentIndex + 1);
           }, this.autoplaySpeed);
