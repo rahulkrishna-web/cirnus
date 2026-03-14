@@ -98,13 +98,13 @@
       </cart-drawer-items>
 
       <div class="drawer__footer">
-        <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
+        <div id="CartDrawer-Footer" class="cart-drawer__footer">
           <div class="totals" role="status">
             <h2 class="totals__subtotal">Subtotal</h2>
             <p class="totals__subtotal-value">{{ cart.total_price | money_with_currency }}</p>
           </div>
 
-          <div class="cart__ctas" {{ block.shopify_attributes }}>
+          <div class="cart__ctas">
             <noscript>
               <button type="submit" class="cart__update-button button button--secondary" form="CartDrawer-Form">
                 Update
@@ -145,7 +145,7 @@
     height: 100%;
     width: var(--drawer-width, 400px);
     max-width: calc(100vw - 3rem);
-    padding: 0 1.5rem;
+    padding: 0;
     border: 0.1rem solid rgba(var(--color-foreground), 0.2);
     border-right: 0;
     background-color: rgb(var(--color-background));
@@ -154,6 +154,7 @@
     flex-direction: column;
     transform: translateX(100%);
     transition: transform var(--duration-default) ease;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
   }
 
   .drawer.active .drawer__inner {
@@ -164,8 +165,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 0;
+    padding: 2rem;
     border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+    background-color: rgb(var(--color-background));
+    z-index: 2;
   }
 
   .drawer__heading {
@@ -181,62 +184,71 @@
   cart-drawer-items {
     flex: 1;
     overflow-y: auto;
+    padding: 0 2rem;
   }
   
   .drawer__footer {
     border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
-    padding: 1.5rem 0;
+    padding: 2rem;
+    background-color: rgb(var(--color-background));
+    z-index: 2;
   }
 
   .cart-item {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 80px 1fr 100px;
     gap: 1.5rem;
     padding: 1.5rem 0;
     border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+    align-items: start;
   }
   
   .cart-item__media {
-    grid-row: 1 / 3;
-    width: 100%;
-    max-width: 80px;
+    width: 80px;
   }
   
-  .cart-item__image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    aspect-ratio: var(--aspect-ratio, 1);
+  .cart-item__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cart-item__quantity-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
   }
 
   .quantity {
     display: flex;
     align-items: center;
     border: 0.1rem solid rgba(var(--color-foreground), 0.08);
-    border-radius: var(--inputs-radius);
+    border-radius: 4px;
+    width: fit-content;
   }
 
-  .quantity__button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    width: 3rem;
-    height: 3rem;
+  .totals {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1rem;
   }
 
-  .quantity__input {
-    width: 3rem;
-    text-align: center;
-    border: none;
-    background: transparent;
+  .totals__subtotal {
+    margin: 0;
+    font-size: 1.6rem;
+  }
+
+  .totals__subtotal-value {
+    margin: 0;
+    font-weight: 600;
   }
 
   .cart__checkout-button {
     width: 100%;
-    margin-top: 1.5rem;
+    padding: 1.2rem;
+    font-weight: 600;
   }
 {% endstylesheet %}
 

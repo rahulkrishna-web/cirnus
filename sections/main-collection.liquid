@@ -221,13 +221,13 @@
         >
           {%- for product in collection.products -%}
             <div class="collection-page__grid-item">
-              {% render 'card-product',
-                card_product: product,
-                media_aspect_ratio: section.settings.image_ratio,
+              {% render 'product-card',
+                product: product,
+                image_ratio: section.settings.image_ratio,
                 show_secondary_image: section.settings.show_secondary_image,
                 show_vendor: section.settings.show_vendor,
                 show_rating: section.settings.show_rating,
-                section_id: section.id
+                enable_quick_buy: section.settings.enable_quick_add
               %}
             </div>
           {%- endfor -%}
@@ -637,6 +637,12 @@
       "id": "show_rating",
       "label": "Show rating",
       "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "label": "Enable Quick Add",
+      "default": true
     }
   ]
 }

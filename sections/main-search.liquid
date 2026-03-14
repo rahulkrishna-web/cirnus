@@ -73,7 +73,12 @@
             <li class="grid__item">
               {%- case item.object_type -%}
                 {%- when 'product' -%}
-                  {%- render 'product-card', product: item, show_vendor: section.settings.show_vendor, image_ratio: section.settings.image_ratio -%}
+                  {%- render 'product-card',
+                    product: item,
+                    show_vendor: section.settings.show_vendor,
+                    image_ratio: section.settings.image_ratio,
+                    enable_quick_buy: true
+                  -%}
                 {%- when 'article' -%}
                   {%- render 'article-card', article: item -%}
                 {%- when 'page' -%}

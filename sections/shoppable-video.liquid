@@ -22,12 +22,14 @@
                     class: 'shoppable-video__video'
                 }}
               {%- elsif block.settings.poster_image != blank -%}
-                <img
-                  src="{{ block.settings.poster_image | image_url: width: 800 }}"
-                  alt="{{ block.settings.poster_image.alt | escape }}"
-                  loading="lazy"
-                  class="shoppable-video__image"
-                >
+                  <img
+                    src="{{ block.settings.poster_image | image_url: width: 800 }}"
+                    alt="{{ block.settings.poster_image.alt | escape }}"
+                    loading="lazy"
+                    class="shoppable-video__image"
+                    width="{{ block.settings.poster_image.width }}"
+                    height="{{ block.settings.poster_image.height }}"
+                  >
               {%- else -%}
                 {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}
@@ -48,7 +50,7 @@
                 ></button>
                 
                 <div class="shoppable-video__product-card" hidden>
-                  {% render 'product-card', product: target_product, show_vendor: false %}
+                  {% render 'product-card', product: target_product, show_vendor: false, enable_quick_buy: true %}
                 </div>
               </div>
             {%- endif -%}
